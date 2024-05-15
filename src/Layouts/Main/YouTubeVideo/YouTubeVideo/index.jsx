@@ -21,78 +21,11 @@ import { inputStyle, multiLineInputStyle } from '../../ResumeBuilder/styles.js';
 import { Colors } from '../../../../constants/Colors';
 
 function YouTubeVideo() {
+	// Database Values
 	const [url, setUrl] = useState('');
 	const [tags, setTags] = useState([]);
 	const [operatingSystem, setOs] = useState('');
 	const [category, setCategory] = useState('');
-	const playerRef = useRef(null);
-
-	// added for tags validation
-	const [tagInputValue, setTagInputValue] = useState('');
-	const handleTagsKeyPress = (e) => {
-		if (e.key !== 'Enter') {
-			setTagInputValue(e.target.value);
-		}
-	};
-
-	// adding for checkbox
-	const [isChecked, setIsChecked] = useState(false);
-	const handleCheckboxChange = () => {
-		setIsChecked(!isChecked);
-	};
-
-	const [isChapter, setIsChapter] = useState(false);
-
-	const getVideoId = (url) => {
-		const videoIdRegex =
-			/(?:(?:https?:\/\/)?(?:www\.)?)?youtu(?:\.be\/|be.com\/(?:watch\?(?:.*&)?v=|(?:embed|v)\/))([\w'-]+)/i;
-		const match = url.match(videoIdRegex);
-		if (match && match[1]) {
-			return match[1];
-		}
-		setUrl('');
-		Swal.fire({
-			width: '30rem',
-			height: '20rem',
-			icon: 'error',
-			title: 'Oops...',
-			text: '"Please enter a valid YouTube video URL."',
-		});
-	};
-
-	const handleUrlChange = async (e) => {
-		const newurl = e.target.value;
-		setUrl(newurl);
-		console.log(newurl);
-
-
-		// first is check if chapters
-		try {
-			const response = await fetch(
-				`https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${getVideoId(newurl)}&key=${
-					process.env.REACT_APP_YOUTUBE_API_KEY
-				}`,
-			);
-			console.log(getVideoId(newurl));
-
-			const data = await response.json();
-			const video = data.items[0];
-
-			const desc = video.snippet.description;
-			const lines = desc.split('\n');
-			const filteredLines = lines.filter((line) => /^\s*\d+:\d+/.test(line));
-
-			// if there are chapter then make isChapter true which will unhide the checkbox
-			if (filteredLines.length > 0) {
-				setIsChapter(true);
-			} else {
-				setIsChapter(false);
-			}
-		} catch (e) {
-			console.log(e);
-		}
-	};
-
 	const [messages, setMessage] = useState([
 		{
 			messages: '',
@@ -104,9 +37,86 @@ function YouTubeVideo() {
 		},
 	]);
 
-	{
-		/* changing for if box is checked */
+	// React-Player
+	const playerRef = useRef(null);
+
+	// Video Chapter Segmentation
+	const [isChapterSegAvailable, setIsChapterSegAvailable] = useState(false);
+	const [isChapterSegChecked, setIsChapterSegChecked] = useState(false);
+	const handleChaperCheckboxChange = () => {
+		setIsChapterSegChecked(!isChapterSegChecked);
+	};
+
+	// It's simpler to fetch all the chapters when we check if they are available
+	const [chapterMessages, setChapterMessage] = useState([
+		{
+			messages: '',
+		},
+	]);
+	const [chapterStopTimes, setChapterStopTimes] = useState([
+		{
+			stopTimes: '',
+		},
+	]);
+
+	// whenever there is a new URL, fetch the chapters if it's a valid URL
+	useEffect(() => {
+		const fetchChapters = async () => {
+		try {
+			// check if the url is a valid youtube video and get the video id for the api
+			const videoIdRegex =
+			/(?:(?:https?:\/\/)?(?:www\.)?)?youtu(?:\.be\/|be.com\/(?:watch\?(?:.*&)?v=|(?:embed|v)\/))([\w'-]+)/i;
+			const match = url.match(videoIdRegex);
+			if (!match || !match[1]) {
+				setUrl('');
+				Swal.fire({
+					width: '30rem',
+					height: '20rem',
+					icon: 'error',
+					title: 'Oops...',
+					text: '"Please enter a valid YouTube video URL."',
+				});
+			}
+
+			// fetch the data from the youtube api
+			const response = await fetch(
+				`https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${(match[1])}&key=${
+					process.env.REACT_APP_YOUTUBE_API_KEY
+				}`,
+			);
+
+			// parse the data for the chapters
+			const data = await response.json();
+			const video = data.items[0];
+
+			const desc = video.snippet.description;
+			const lines = desc.split('\n');
+			const filteredLines = lines.filter((line) => /^\s*\d+:\d+/.test(line));
+
+			// if there are chapter then setIsChapterSegAvailable true which will unhide the checkbox
+			if (filteredLines.length > 0) {
+				setIsChapterSegAvailable(true);
+
+				const updatedStopTimes = filteredLines.map((line) => convertToSeconds(line.split(' ')[0]));
+				updatedStopTimes.shift();
+				const updatedMessages = filteredLines.map(() => 'Are you following along so far?');
+
+				setChapterStopTimes(updatedStopTimes);
+				setChapterMessage(updatedMessages);
+			} else {
+				setIsChapterSegAvailable(false);
+			}
+		} catch (error) {
+			console.log(error);
+			alert(error);
+		}
+	};
+	if (url) {
+		setIsChapterSegChecked(false);
+		fetchChapters();
 	}
+	}, [url]);
+
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 
@@ -117,39 +127,16 @@ function YouTubeVideo() {
 			return;
 		}
 
-		if (isChecked) {
+		if (isChapterSegChecked) {
 			e.preventDefault();
-
-			const urlRegex = /^(https?:\/\/)/i;
-
-			try {
-				const response = await fetch(
-					`https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${getVideoId(url)}&key=${
-						process.env.REACT_APP_YOUTUBE_API_KEY
-					}`,
-				);
-				const data = await response.json();
-				const video = data.items[0];
-
-				const desc = video.snippet.description;
-				// filter the description for the timestamps
-				const lines = desc.split('\n');
-				const filteredLines = lines.filter((line) => /^\s*\d+:\d+/.test(line));
-				const updatedStopTimes = filteredLines.map((line) => convertToSeconds(line.split(' ')[0]));
-				updatedStopTimes.shift();
-				const updatedMessages = filteredLines.map(() => 'Are you following along so far?');
-
-				setStopTimes(updatedStopTimes);
-				setMessage(updatedMessages);
-
 				try {
 					await addVideoData('youtube-videos', {
 						url,
 						tags,
 						operating_system: operatingSystem,
 						category,
-						stopTimes: updatedStopTimes,
-						messages: updatedMessages,
+						stopTimes: chapterStopTimes,
+						messages: chapterMessages,
 					});
 
 					setUrl('');
@@ -159,8 +146,8 @@ function YouTubeVideo() {
 					setStopTimes([{ stopTimes: '' }]);
 					setMessage([{ message: '' }]);
 					// set checked to false
-					setIsChecked(false);
-					setIsChapter(false);
+					setIsChapterSegChecked(false);
+					setIsChapterSegAvailable(false);
 
 					Swal.fire({
 						width: '30rem',
@@ -168,11 +155,9 @@ function YouTubeVideo() {
 						text: 'Video added successfully!',
 						icon: 'success',
 					});
-				} catch (e) {
-					console.log('Error adding video:', e);
-				}
-			} catch (e) {
-				alert(e);
+				} catch (error) {
+				console.log('Error adding video:', error);
+				alert(error);
 			}
 		} else {
 			const isValid2 = validateInputFields2();
@@ -206,8 +191,8 @@ function YouTubeVideo() {
 				setStopTimes([{ stopTimes: '' }]);
 				setMessage([{ message: '' }]);
 
-				setIsChecked(false);
-				setIsChapter(false);
+				setIsChapterSegChecked(false);
+				setIsChapterSegAvailable(false);
 
 				const textField = document.getElementById(`stopTimeTextField_0`);
 				if (textField) {
@@ -249,6 +234,14 @@ function YouTubeVideo() {
 		setMessage(messages);
 		// console.log("after stopTimes: " + stopTimes + "\nmessages: " + messages);
 	}
+
+	// added for tags validation
+	const [tagInputValue, setTagInputValue] = useState('');
+	const handleTagsKeyPress = (e) => {
+		if (e.key !== 'Enter') {
+			setTagInputValue(e.target.value);
+		}
+	};
 
 	// Validate the necessary input fields.
 	const validateInputFields = () => {
@@ -661,8 +654,8 @@ function YouTubeVideo() {
 									InputProps={{
 										disableUnderline: true,
 									}}
-									onChange={handleUrlChange}
-									// onChange={(e) => setUrl(e.target.value)}
+									// onChange={handleUrlChange}
+									onChange={(e) => setUrl(e.target.value)}
 									focused
 								/>
 							</Box>
@@ -822,17 +815,17 @@ function YouTubeVideo() {
 				}}
 			>
 				<Grid container spacing={2} sx={{ margin: 'auto', width: '97%' }}>
-					{isChapter && (
+					{isChapterSegAvailable && (
 						<Grid item xs={6}>
 							<FormControlLabel
-								control={<Checkbox checked={isChecked} onChange={handleCheckboxChange} />}
+								control={<Checkbox checked={isChapterSegChecked} onChange={handleChaperCheckboxChange} />}
 								label="Use default segmentation from the video"
 							/>
 						</Grid>
 					)}
-					{!isChecked && (
+					{!isChapterSegChecked && (
 						<>
-							<Grid item xs={isChapter ? 6 : 12} style={{ textAlign: 'end' }}>
+							<Grid item xs={isChapterSegAvailable ? 6 : 12} style={{ textAlign: 'end' }}>
 								<Box
 									sx={{
 										color: Colors.primaryColor,
