@@ -102,17 +102,19 @@ export default function YouTubeVideoSection({ osvalue, subtopicValue, tags, appl
 					<Popup 
 						text={popup.text} 
 						handleResume={() => {
-							setPopup(null);
+							popup.visible = false;
+							setTimeout(() => setPopup(popup.visible), 1000); // prevents repeated popup
 							popup.playerRef.current.getInternalPlayer().playVideo();
 						}}
 						handleRestart={() => {
-							setPopup(null);
+							popup.visible = false;
 							popup.playerRef.current.getInternalPlayer().seekTo(0);
 							popup.playerRef.current.getInternalPlayer().playVideo();
 						}}
 						handleRestartFrom={() => {
-							setPopup(null);
-							popup.playerRef.current.getInternalPlayer().seekTo(popup.prevSegmentTime+1); // +1 is so that the video doesn't have an immediate popup from the same segment
+							popup.visible = false;
+							setTimeout(() => setPopup(popup.visible), 1000); // prevents repeated popup & prev segment popup
+							popup.playerRef.current.getInternalPlayer().seekTo(popup.prevSegmentTime);
 							popup.playerRef.current.getInternalPlayer().playVideo();
 						}}
 					/>
