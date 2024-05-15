@@ -1,7 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'; 
 import { addVideoData } from '../../../../firebase/firebaseReadWrite';
-import { Colors } from '../../../../constants/Colors';
-import { inputStyle, multiLineInputStyle } from '../../ResumeBuilder/styles.js';
 import {
 	Box,
 	Grid,
@@ -15,30 +13,27 @@ import {
 	Button,
 	Divider,
 } from '@mui/material';
-import YouTube from 'react-youtube';
 import { TagsInput } from 'react-tag-input-component';
 import './styles.css';
 import Swal from 'sweetalert2';
-import { filter } from 'lodash';
-import { string } from 'prop-types';
+import ReactPlayer from 'react-player/youtube';
+import { inputStyle, multiLineInputStyle } from '../../ResumeBuilder/styles.js';
+import { Colors } from '../../../../constants/Colors';
 
 function YouTubeVideo() {
 	const [url, setUrl] = useState('');
 	const [tags, setTags] = useState([]);
-	const [operating_system, setOs] = useState('');
+	const [operatingSystem, setOs] = useState('');
 	const [category, setCategory] = useState('');
-	const [videoId, setVideoId] = useState('');
-	const [opts, setOpts] = useState({});
+	const playerRef = useRef(null);
 
-	//added for tags validation
+	// added for tags validation
 	const [tagInputValue, setTagInputValue] = useState('');
 	const handleTagsKeyPress = (e) => {
 		if (e.key !== 'Enter') {
 			setTagInputValue(e.target.value);
 		}
 	};
-
-	const [count, setCount] = useState(0); // we were not sure what this does but didnt want to remove it incase it does something
 
 	// adding for checkbox
 	const [isChecked, setIsChecked] = useState(false);
@@ -48,12 +43,28 @@ function YouTubeVideo() {
 
 	const [isChapter, setIsChapter] = useState(false);
 
-	const [duration, setDuration] = useState(0);
+	const getVideoId = (url) => {
+		const videoIdRegex =
+			/(?:(?:https?:\/\/)?(?:www\.)?)?youtu(?:\.be\/|be.com\/(?:watch\?(?:.*&)?v=|(?:embed|v)\/))([\w'-]+)/i;
+		const match = url.match(videoIdRegex);
+		if (match && match[1]) {
+			return match[1];
+		}
+		setUrl('');
+		Swal.fire({
+			width: '30rem',
+			height: '20rem',
+			icon: 'error',
+			title: 'Oops...',
+			text: '"Please enter a valid YouTube video URL."',
+		});
+	};
 
 	const handleUrlChange = async (e) => {
 		const newurl = e.target.value;
 		setUrl(newurl);
-		setVideoId(getVideoId(newurl));
+		console.log(newurl);
+
 
 		// first is check if chapters
 		try {
@@ -62,6 +73,8 @@ function YouTubeVideo() {
 					process.env.REACT_APP_YOUTUBE_API_KEY
 				}`,
 			);
+			console.log(getVideoId(newurl));
+
 			const data = await response.json();
 			const video = data.items[0];
 
@@ -75,52 +88,10 @@ function YouTubeVideo() {
 			} else {
 				setIsChapter(false);
 			}
-
-			//make another call for the duration
-			const response2 = await fetch(
-				`https://www.googleapis.com/youtube/v3/videos?part=contentDetails&id=${getVideoId(newurl)}&key=${
-					process.env.REACT_APP_YOUTUBE_API_KEY
-				}`,
-			);
-			const data2 = await response2.json();
-			const duration2 = data2.items[0].contentDetails.duration;
-			const match = duration2.match(/PT(\d+H)?(\d+M)?(\d+S)?/);
-			const min = parseInt(match[2]) || 0;
-			const sec = parseInt(match[3]) || 0;
-			let temp = min * 60 + sec;
-			setDuration(temp);
 		} catch (e) {
 			console.log(e);
 		}
 	};
-
-	const getVideoId = (url) => {
-		const videoIdRegex =
-			/(?:(?:https?:\/\/)?(?:www\.)?)?youtu(?:\.be\/|be.com\/(?:watch\?(?:.*&)?v=|(?:embed|v)\/))([\w'-]+)/i;
-		const match = url.match(videoIdRegex);
-		if (match && match[1]) {
-			return match[1];
-		}
-		setVideoId('');
-		setUrl('');
-		Swal.fire({
-			width: '30rem',
-			height: '20rem',
-			icon: 'error',
-			title: 'Oops...',
-			text: '"Please enter a valid YouTube video URL."',
-		});
-	};
-
-	useEffect(() => {
-		setOpts({
-			height: '390',
-			width: '640',
-			playerVars: {
-				autoplay: 0,
-			},
-		});
-	}, []);
 
 	const [messages, setMessage] = useState([
 		{
@@ -148,7 +119,6 @@ function YouTubeVideo() {
 
 		if (isChecked) {
 			e.preventDefault();
-			setVideoId('');
 
 			const urlRegex = /^(https?:\/\/)/i;
 
@@ -174,10 +144,10 @@ function YouTubeVideo() {
 
 				try {
 					await addVideoData('youtube-videos', {
-						url: url,
-						tags: tags,
-						operating_system: operating_system,
-						category: category,
+						url,
+						tags,
+						operating_system: operatingSystem,
+						category,
 						stopTimes: updatedStopTimes,
 						messages: updatedMessages,
 					});
@@ -194,7 +164,7 @@ function YouTubeVideo() {
 
 					Swal.fire({
 						width: '30rem',
-						//height: '10rem',
+						// height: '10rem',
 						text: 'Video added successfully!',
 						icon: 'success',
 					});
@@ -215,19 +185,18 @@ function YouTubeVideo() {
 
 
 			e.preventDefault();
-			setVideoId('');
 
 			// eslint-disable-next-line
 			const urlRegex = /^(https?:\/\/)/i;
 
 			try {
 				await addVideoData('youtube-videos', {
-					url: url,
-					tags: tags,
-					operating_system: operating_system,
-					category: category,
-					stopTimes: stopTimes,
-					messages: messages,
+					url,
+					tags,
+					operating_system: operatingSystem,
+					category,
+					stopTimes,
+					messages,
 				});
 
 				setUrl('');
@@ -251,7 +220,7 @@ function YouTubeVideo() {
 
 				Swal.fire({
 					width: '30rem',
-					//height: '10rem',
+					// height: '10rem',
 					text: 'Video added successfully!',
 					icon: 'success',
 				});
@@ -262,7 +231,7 @@ function YouTubeVideo() {
 	};
 
 	const sortStopTimes= () => {
-		//console.log("before stopTimes: " + stopTimes + "\nmessages: " + messages);
+		// console.log("before stopTimes: " + stopTimes + "\nmessages: " + messages);
 		for (let i = 0; i < messages.length - 1; i++) {
 			for (let j = i + 1; j < messages.length; j++) {
 				if (stopTimes[i] > stopTimes[j]) {
@@ -278,7 +247,7 @@ function YouTubeVideo() {
 		}
 		setStopTimes(stopTimes);
 		setMessage(messages);
-		//console.log("after stopTimes: " + stopTimes + "\nmessages: " + messages);
+		// console.log("after stopTimes: " + stopTimes + "\nmessages: " + messages);
 	}
 
 	// Validate the necessary input fields.
@@ -308,8 +277,8 @@ function YouTubeVideo() {
 			}
 		}
 
-		//check operating system
-		if (operating_system === '') {
+		// check operating system
+		if (operatingSystem === '') {
 			Swal.fire({
 				width: '30rem',
 				title: 'Oops...',
@@ -319,7 +288,7 @@ function YouTubeVideo() {
 			return false;
 		}
 
-		//check category
+		// check category
 		if (category === '') {
 			Swal.fire({
 				width: '30rem',
@@ -336,7 +305,7 @@ function YouTubeVideo() {
 	const validateInputFields2 = () => {
 		// Checks if a string is empty or contains only whitespace
 		const isEmptyOrSpaces = (str) => {
-			if (typeof str != 'string') return true;
+			if (typeof str !== 'string') return true;
 			return !str || str.trim() === '';
 		};
 
@@ -344,9 +313,9 @@ function YouTubeVideo() {
 
 		const hasEmptyMessage = messages.some((msg) => isEmptyOrSpaces(msg));
 
-		//console.log('messages size: ' + messages.length);
-		//console.log('first message' + messages[0]);
-		//console.log('has empty message?' + messages.some((msg) => isEmptyOrSpaces(msg)));
+		// console.log('messages size: ' + messages.length);
+		// console.log('first message' + messages[0]);
+		// console.log('has empty message?' + messages.some((msg) => isEmptyOrSpaces(msg)));
 
 		if (hasEmptyMessage) {
 			Swal.fire({
@@ -358,10 +327,10 @@ function YouTubeVideo() {
 		}
 
 		for (let i = 0; i < messages.length; i++) {
-			let textField = document.getElementById(`stopTimeTextField_${i}`);
+			const textField = document.getElementById(`stopTimeTextField_${i}`);
 			if (textField) {
 				const regex = /^[0-5]?[0-9]:[0-5][0-9]$/; // validate MM:SS or M:SSformat
-				let temp = regex.test(textField.value);
+				const temp = regex.test(textField.value);
 
 				if (!temp) {
 					Swal.fire({
@@ -371,9 +340,9 @@ function YouTubeVideo() {
 					});
 					return false;
 				}
-				//check that the min and seconds inputted are less than the max
-				//console.log('stopTimes[' + i + ']: ' + stopTimes[i] + '\nduration: ' + duration);
-				if (stopTimes[i] > duration) {
+				// check that the min and seconds inputted are less than the max
+				// console.log('stopTimes[' + i + ']: ' + stopTimes[i] + '\nduration: ' + duration);
+				if (stopTimes[i] > playerRef.current.getDuration()) {
 					Swal.fire({
 						icon: 'error',
 						title: 'Oops...',
@@ -386,10 +355,9 @@ function YouTubeVideo() {
 		return true;
 	};
 
-	const playerRef = useRef(null);
-	const handleClickTime = async (index) => {
+	const handleClickTime = (index) => {
 		if (playerRef.current) {
-			const currentTime = await playerRef.current.internalPlayer.getCurrentTime();
+			const currentTime = playerRef.current.getDuration();
 			const formattedTime = `${Math.floor(currentTime / 60)}:${String(Math.floor(currentTime % 60)).padStart(2, '0')}`;
 			const reverseIndex = messages.length - index - 1;
 			stopTimes[reverseIndex] = convertToSeconds(formattedTime);
@@ -406,7 +374,7 @@ function YouTubeVideo() {
 			messages: '',
 			stopTimes: '',
 		};
-		//You have to be specific of which field of newField to solve the previous commenting messages issue.
+		// You have to be specific of which field of newField to solve the previous commenting messages issue.
 		setMessage([...messages, newField.messages]);
 		setStopTimes([...stopTimes, newField.stopTimes]);
 	};
@@ -418,7 +386,6 @@ function YouTubeVideo() {
 		const stopdata = [...stopTimes];
 		stopdata.splice(index, 1);
 		setStopTimes(stopdata);
-		setCount(count + 1);
 
 		for (let i = 0; i < messagedata.length; i++) {
 			let textField = document.getElementById(`stopTimeTextField_${i}`);
@@ -449,7 +416,6 @@ function YouTubeVideo() {
 		}
 		setStopTimes(stopTime);
 		setMessage(message);
-		setCount(count + 1);
 	};
 
 	const messageInput = messages.map((input, index) => (
@@ -527,7 +493,7 @@ function YouTubeVideo() {
 						>
 							<TextField
 								value={input.stopTime}
-								//borderRadius=".375rem"
+								// borderRadius=".375rem"
 								sx={inputStyle}
 								variant="filled"
 								placeholder="Specify pause times for video in format min:sec, e.g. 0:30"
@@ -620,14 +586,28 @@ function YouTubeVideo() {
 						'@media screen and (min-width: 1444px)': {
 							position: 'fixed',
 							top: '50%',
-							right: '0',
+							right: '0%',
 							transform: 'translateY(-50%)',
 							zIndex: 1000, // makes video float. may need to change so it is different with different resolutions
 							boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px',
 						},
 					}}
 				>
-					{videoId && <YouTube videoId={videoId} opts={opts} ref={playerRef} sx={{ margin: 'auto' }} />}
+					<ReactPlayer
+							ref={playerRef}
+							className='react-player'
+							url = {url}
+							// width='100%'
+							// height='100%'
+							config={{
+								youtube: {
+									playerVars: {         
+										controls: 1,
+										showinfo: 1
+									}
+								}
+							}}
+					/>
 				</Box>
 				<Box
 					sx={{
@@ -758,7 +738,7 @@ function YouTubeVideo() {
 										id="demo-simple-select"
 										label=" What kind of device is this for?"
 										onChange={(e) => setOs(e.target.value)}
-										value={operating_system}
+										value={operatingSystem}
 									>
 										<MenuItem disabled>Mobile Devices</MenuItem>
 										<MenuItem value="iOS">iOS</MenuItem>
@@ -819,7 +799,7 @@ function YouTubeVideo() {
 				</Box>
 			</Box>
 
-			{/* Altering this to have a checkbox that hides it -ben*/}
+			{/* Altering this to have a checkbox that hides it -ben */}
 			<Box
 				sx={{
 					backgroundColor: Colors.backgroundColor,
