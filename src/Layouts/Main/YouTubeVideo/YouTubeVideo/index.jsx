@@ -17,8 +17,13 @@ import { TagsInput } from 'react-tag-input-component';
 import './styles.css';
 import Swal from 'sweetalert2';
 import ReactPlayer from 'react-player/youtube';
-import { inputStyle, multiLineInputStyle } from '../../ResumeBuilder/styles.js';
-import { Colors } from '../../../../constants/Colors';
+import { set } from 'lodash';
+import Popup from './Popups/Popups';
+
+import MessageInputSection from './MessageInputSection';
+import SubmitButton from './SubmitButton.jsx';
+import VideoSection from './VideoSection.jsx';
+import YoutubeVideoInputSection from './VideoInputSection.jsx';
 
 function YouTubeVideo() {
 	// Database Values
@@ -38,7 +43,7 @@ function YouTubeVideo() {
 	]);
 
 	// React-Player
-	const playerRef = useRef(null);
+	const playerRef = useRef();
 
 	// Video Chapter Segmentation
 	const [isChapterSegAvailable, setIsChapterSegAvailable] = useState(false);
@@ -59,6 +64,9 @@ function YouTubeVideo() {
 		},
 	]);
 
+	// popup message
+	const [popup, setPopup] = useState(null);
+
 	// whenever there is a new URL, fetch the chapters if it's a valid URL
 	useEffect(() => {
 		const fetchChapters = async () => {
@@ -69,13 +77,13 @@ function YouTubeVideo() {
 			const match = url.match(videoIdRegex);
 			if (!match || !match[1]) {
 				setUrl('');
-				Swal.fire({
-					width: '30rem',
-					height: '20rem',
-					icon: 'error',
+				setPopup({
+					text: 'Please enter a valid YouTube video URL.',
+					visible: true,
 					title: 'Oops...',
-					text: '"Please enter a valid YouTube video URL."',
+					icon: 'error',
 				});
+				return;
 			}
 
 			// fetch the data from the youtube api
@@ -149,10 +157,9 @@ function YouTubeVideo() {
 					setIsChapterSegChecked(false);
 					setIsChapterSegAvailable(false);
 
-					Swal.fire({
-						width: '30rem',
-						// height: '10rem',
+					setPopup({
 						text: 'Video added successfully!',
+						visible: true,
 						icon: 'success',
 					});
 				} catch (error) {
@@ -203,14 +210,13 @@ function YouTubeVideo() {
 					textField2.value = '';
 				}
 
-				Swal.fire({
-					width: '30rem',
-					// height: '10rem',
+				setPopup({
 					text: 'Video added successfully!',
+					visible: true,
 					icon: 'success',
 				});
-			} catch (e) {
-				console.log('Error adding video:', e);
+			} catch (error) {
+				console.log('Error adding video:', error);
 			}
 		}
 	};
@@ -247,10 +253,10 @@ function YouTubeVideo() {
 	const validateInputFields = () => {
 		// check youtube url field
 		if (url === '') {
-			Swal.fire({
-				width: '30rem',
-				title: 'Oops...',
+			setPopup({
 				text: 'Please enter a Youtube video URL.',
+				title: 'Oops...',
+				visible: true,
 				icon: 'error',
 			});
 			return false;
@@ -260,10 +266,10 @@ function YouTubeVideo() {
 		const lastTag = tags[tags.length - 1];
 		if (!(tags.length === 0 && tagInputValue === '')) {
 			if ((!(tagInputValue === lastTag) && tagInputValue !== '') || tags.length === 0) {
-				Swal.fire({
-					width: '30rem',
-					title: 'Oops...',
+				setPopup({
 					text: 'Please press enter or delete your current tag.',
+					title: 'Oops...',
+					visible: true,
 					icon: 'error',
 				});
 				return false;
@@ -272,10 +278,10 @@ function YouTubeVideo() {
 
 		// check operating system
 		if (operatingSystem === '') {
-			Swal.fire({
-				width: '30rem',
-				title: 'Oops...',
+			setPopup({
 				text: 'Please select an Operating System.',
+				title: 'Oops...',
+				visible: true,
 				icon: 'error',
 			});
 			return false;
@@ -283,10 +289,10 @@ function YouTubeVideo() {
 
 		// check category
 		if (category === '') {
-			Swal.fire({
-				width: '30rem',
-				title: 'Oops...',
+			setPopup({
 				text: 'Please select a video category.',
+				title: 'Oops...',
+				visible: true,
 				icon: 'error',
 			});
 			return false;
@@ -311,10 +317,11 @@ function YouTubeVideo() {
 		// console.log('has empty message?' + messages.some((msg) => isEmptyOrSpaces(msg)));
 
 		if (hasEmptyMessage) {
-			Swal.fire({
-				icon: 'error',
-				title: 'Oops...',
+			setPopup({
 				text: 'Please ensure all confirmation messages are filled out.',
+				title: 'Oops...',
+				visible: true,
+				icon: 'error',
 			});
 			return false;
 		}
@@ -336,10 +343,11 @@ function YouTubeVideo() {
 				// check that the min and seconds inputted are less than the max
 				// console.log('stopTimes[' + i + ']: ' + stopTimes[i] + '\nduration: ' + duration);
 				if (stopTimes[i] > playerRef.current.getDuration()) {
-					Swal.fire({
-						icon: 'error',
-						title: 'Oops...',
+					setPopup({
 						text: 'Please ensure all stop times are below the video length.',
+						title: 'Oops...',
+						visible: true,
+						icon: 'error',
 					});
 					return false;
 				}
@@ -411,455 +419,36 @@ function YouTubeVideo() {
 		setMessage(message);
 	};
 
-	const messageInput = messages.map((input, index) => (
-		<Box key={messages.length - index - 1}>
-			<Grid
-				container
-				spacing={2}
-				sx={{
-					margin: 'auto',
-					width: '97%',
-					paddingRight: '0.5rem',
-					marginTop: '1rem',
-				}}
-			>
-				<Grid item md={6} sm={6} xs={12} order={{ xs: 1 }}>
-					<Box
-						sx={{
-							width: '97%',
-							margin: 'auto',
-							color: Colors.primaryColor,
-							fontWeight: '700',
-						}}
-					>
-						Segment #{messages.length - index}
-					</Box>
-				</Grid>
-
-				<Grid item md={6} sm={6} xs={12} order={{ xs: 1 }}>
-					<Box
-						sx={{
-							color: Colors.primaryColor,
-							fontSize: { sm: '1rem', xs: '0.8rem' },
-							textAlign: 'right',
-							paddingRight: '1rem',
-							cursor: 'pointer',
-						}}
-						onClick={() => {
-							remove(messages.length - index - 1);
-						}}
-					>
-						- Remove Segment
-					</Box>
-				</Grid>
-			</Grid>
-
-			<Grid
-				key={messages.length - index - 1}
-				id={`experience-form-${messages.length - index - 1}`}
-				container
-				spacing={2}
-				sx={{ margin: 'auto', width: '97%', paddingRight: '0.5rem' }}
-			>
-				<Grid container spacing={2} sx={{ margin: 'auto', width: '97%', paddingRight: '0.5rem' }}>
-					<Grid item>
-						<Box
-							sx={{
-								marginTop: '1.2rem',
-								color: Colors.primaryColor,
-								fontSize: '1rem',
-								fontFamily: 'Inria Sans',
-								fontWeight: '700',
-								marginLeft: '0.5rem',
-							}}
-						>
-							Stop Times:
-						</Box>
-					</Grid>
-					<Grid item md={8} sm={6} xs={12}>
-						<Box
-							component="form"
-							sx={{
-								'& > :not(style)': { width: '100%' },
-							}}
-							autoComplete="off"
-						>
-							<TextField
-								value={input.stopTime}
-								// borderRadius=".375rem"
-								sx={inputStyle}
-								variant="filled"
-								placeholder="Specify pause times for video in format min:sec, e.g. 0:30"
-								focused
-								onChange={(e) => {
-									handleChange(messages.length - index - 1, e);
-								}}
-								name="stopTimes"
-								InputProps={{
-									id: `stopTimeTextField_${messages.length - index - 1}`,
-									disableUnderline: true,
-								}}
-							/>
-						</Box>
-					</Grid>
-					<Grid item md={2} sm={3} xs={12}>
-						<button
-							onClick={(e) => handleClickTime(index, e)}
-							style={{
-								width: '100%',
-								height: '100%',
-								fontSize: '16px',
-								backgroundColor: Colors.primaryColor, 
-								color: '#fff',
-								cursor: 'pointer',
-								fontWeight: 'bold', 
-							}}
-						>
-							Get Timestamp
-						</button>
-					</Grid>
-				</Grid>
-
-				{/* Description row */}
-				<Grid item xs={12}>
-					<Grid item xs={12}>
-						<Grid item>
-							<Box
-								sx={{
-									marginTop: '1.2rem',
-									color: Colors.primaryColor,
-									fontSize: '1.1rem',
-									fontFamily: 'Inria Sans',
-									fontWeight: '700',
-									marginLeft: '0.5rem',
-									marginBottom: '0.5rem',
-								}}
-							>
-								Confirmation Message:
-							</Box>
-						</Grid>
-						<Box
-							component="form"
-							sx={{
-								'& > :not(style)': { width: '100%' },
-							}}
-							autoComplete="off"
-						>
-							<TextField
-								sx={multiLineInputStyle}
-								variant="standard"
-								multiline
-								value={input.messages}
-								name="messages"
-								InputProps={{
-									id: `confirmationTextField_${messages.length - index - 1}`,
-									disableUnderline: true,
-								}}
-								onChange={(e) => {
-									handleChange(messages.length - index - 1, e);
-								}}
-								rows={5}
-							/>
-						</Box>
-					</Grid>
-				</Grid>
-			</Grid>
-		</Box>
-	));
-
 	return (
 		<>
-			<Box>
-				<Box
-					sx={{
-						display: 'flex',
-						justifyContent: 'center',
-						alignItems: 'center',
-						marginTop: '2rem',
-						'@media screen and (min-width: 1444px)': {
-							position: 'fixed',
-							top: '50%',
-							right: '0%',
-							transform: 'translateY(-50%)',
-							zIndex: 1000, // makes video float. may need to change so it is different with different resolutions
-							boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px',
-						},
-					}}
-				>
-					<ReactPlayer
-							ref={playerRef}
-							className='react-player'
-							url = {url}
-							// width='100%'
-							// height='100%'
-							config={{
-								youtube: {
-									playerVars: {         
-										controls: 1,
-										showinfo: 1
-									}
-								}
-							}}
-					/>
-				</Box>
-				<Box
-					sx={{
-						backgroundColor: Colors.backgroundColor,
-						height: 'auto',
-						borderRadius: '1rem',
-						boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px',
-						margin: 'auto',
-						marginTop: '2rem',
-						paddingBottom: '2rem',
-						width: '90%',
-						'@media screen and (min-width: 1444px)': {
-							display: 'flex',
-							flexDirection: 'column', 
-							justifyContent: 'flex-start', 
-							alignItems: 'flex-start', 
-							marginTop: '2rem',
-							marginLeft: '2rem', 
-							width: '53%', 
-						},
-					}}
-				>
-					<Grid container spacing={2} sx={{ margin: 'auto', width: '97%', paddingRight: '0.5rem' }}>
-						<Grid item xs={1.6}>
-							<Box
-								sx={{
-									marginTop: '1.2rem',
-									color: Colors.primaryColor,
-									fontSize: '1rem',
-									fontFamily: 'Inria Sans',
-									fontWeight: '700',
-									marginLeft: '0.5rem',
-								}}
-							>
-								Youtube Link:
-							</Box>
-						</Grid>
-						<Grid item md={10} sm={10} xs={12}>
-							<Box
-								component="form"
-								sx={{
-									'& > :not(style)': { width: '100%', paddingBottom: '1rem' },
-								}}
-								autoComplete="off"
-							>
-								<TextField
-									sx={inputStyle}
-									variant="filled"
-									value={url}
-									placeholder="Input Youtube Video Url"
-									InputProps={{
-										disableUnderline: true,
-									}}
-									// onChange={handleUrlChange}
-									onChange={(e) => setUrl(e.target.value)}
-									focused
-								/>
-							</Box>
-						</Grid>
-					</Grid>
-					<Grid container spacing={2} sx={{ margin: 'auto', width: '97%', paddingRight: '0.5rem' }}>
-						<Grid item xs={1.6}>
-							<Box
-								sx={{
-									marginTop: '1.2rem',
-									color: Colors.primaryColor,
-									fontSize: '1rem',
-									fontFamily: 'Inria Sans',
-									fontWeight: '700',
-									marginLeft: '0.5rem',
-								}}
-							>
-								Tags:
-							</Box>
-						</Grid>
-
-						<Grid item md={10} sm={10} xs={12}>
-							<Box
-								component="form"
-								sx={{
-									'& > :not(style)': { width: 'auto', padding: '1rem' },
-								}}
-								autoComplete="off"
-							>
-								<TagsInput
-									InputProps={{
-										disableUnderline: true,
-									}}
-									type="text"
-									variant="standard"
-									id="search"
-									value={tags}
-									separators={['Enter']}
-									onChange={setTags}
-									placeHolder="To add tags, input the desired word and press Enter"
-									onKeyUp={handleTagsKeyPress}
-								/>
-							</Box>
-						</Grid>
-					</Grid>
-					<Grid container spacing={2} sx={{ margin: 'auto', width: '97%', paddingRight: '0.5rem' }}>
-						<Grid item xs={1.6}>
-							<Box
-								sx={{
-									marginTop: '2rem',
-									color: Colors.primaryColor,
-									fontSize: '1rem',
-									fontFamily: 'Inria Sans',
-									fontWeight: '700',
-									marginLeft: '0.5rem',
-								}}
-							>
-								Operating System:
-							</Box>
-						</Grid>
-						<Grid item md={10} sm={10} xs={12}>
-							<Box
-								component="form"
-								sx={{
-									'& > :not(style)': { width: '100%' },
-								}}
-								autoComplete="off"
-							>
-								<FormControl fullWidth sx={{ marginTop: '1rem' }}>
-									<InputLabel id="demo-simple-select-label">What kind of device is this for?</InputLabel>
-									<Select
-										labelId="demo-simple-select-label"
-										id="demo-simple-select"
-										label=" What kind of device is this for?"
-										onChange={(e) => setOs(e.target.value)}
-										value={operatingSystem}
-									>
-										<MenuItem disabled>Mobile Devices</MenuItem>
-										<MenuItem value="iOS">iOS</MenuItem>
-										<MenuItem value="Android">Android</MenuItem>
-										<Divider />
-										<MenuItem disabled>PC</MenuItem>
-										<MenuItem value="Windows">Windows</MenuItem>
-										<MenuItem value="Mac">Mac</MenuItem>
-										<MenuItem value="Linux">Linux</MenuItem>
-										<Divider />
-										<MenuItem value="All">All</MenuItem>
-									</Select>
-								</FormControl>
-							</Box>
-						</Grid>
-					</Grid>
-					<Grid container spacing={2} sx={{ margin: 'auto', width: '97%', paddingRight: '0.5rem' }}>
-						<Grid item xs={1.6}>
-							<Box
-								sx={{
-									marginTop: '2rem',
-									color: Colors.primaryColor,
-									fontSize: '1rem',
-									fontFamily: 'Inria Sans',
-									fontWeight: '700',
-									marginLeft: '0.5rem',
-								}}
-							>
-								Video Category:
-							</Box>
-						</Grid>
-						<Grid item md={10} sm={10} xs={12}>
-							<Box
-								component="form"
-								sx={{
-									'& > :not(style)': { width: '100%' },
-								}}
-								autoComplete="off"
-							>
-								<FormControl fullWidth sx={{ marginTop: '1rem' }}>
-									<InputLabel id="demo-simple-select-label">What category is this video for?</InputLabel>
-									<Select
-										labelId="demo-simple-select-label"
-										id="demo-simple-select"
-										label=" What category is this video for?"
-										onChange={(e) => setCategory(e.target.value)}
-										value={category}
-									>
-										<MenuItem value="daily_life">Technology Use in Daily Life</MenuItem>
-										<MenuItem value="safety_privacy">Technology Safety and Privacy</MenuItem>
-										<MenuItem value="class_word">Technology use for Class and Word</MenuItem>
-										<MenuItem value="finance">Financial Well Being and Management</MenuItem>
-									</Select>
-								</FormControl>
-							</Box>
-						</Grid>
-					</Grid>
-				</Box>
-			</Box>
+			<VideoSection playerRef={playerRef} url={url} />
+		
+			<YoutubeVideoInputSection setUrl={setUrl} tags={tags} handleTagsKeyPress={handleTagsKeyPress} setTags={setTags} setOs={setOs} operatingSystem={operatingSystem} setCategory={setCategory} />
+			
 
 			{/* Altering this to have a checkbox that hides it -ben */}
-			<Box
-				sx={{
-					backgroundColor: Colors.backgroundColor,
-					height: 'auto',
-					borderRadius: '1rem',
-					boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px',
-					margin: 'auto',
-					paddingBottom: '2rem',
-					width: '90%',
-					marginTop: '2rem',
-					'@media screen and (min-width: 1444px)': {
-						display: 'flex',
-						flexDirection: 'column', 
-						justifyContent: 'flex-start', 
-						alignItems: 'flex-start', 
-						marginTop: '2rem',
-						marginLeft: '2rem', 
-						width: '53%', 
-					},
-				}}
-			>
-				<Grid container spacing={2} sx={{ margin: 'auto', width: '97%' }}>
-					{isChapterSegAvailable && (
-						<Grid item xs={6}>
-							<FormControlLabel
-								control={<Checkbox checked={isChapterSegChecked} onChange={handleChaperCheckboxChange} />}
-								label="Use default segmentation from the video"
-							/>
-						</Grid>
-					)}
-					{!isChapterSegChecked && (
-						<>
-							<Grid item xs={isChapterSegAvailable ? 6 : 12} style={{ textAlign: 'end' }}>
-								<Box
-									sx={{
-										color: Colors.primaryColor,
-										fontSize: { sm: '1rem', xs: '0.8rem' },
-										textAlign: 'end',
-										marginTop: '1rem',
-										paddingRight: '1rem',
-										cursor: 'pointer',
-									}}
-									onClick={onAddBtnClick}
-								>
-									+ Add a Segment
-								</Box>
-							</Grid>
-							<Grid item xs={12}>
-								{messageInput}
-							</Grid>
-						</>
-					)}
-				</Grid>
-			</Box>
+			<MessageInputSection
+				onAddBtnClick={onAddBtnClick}
+				isChapterSegAvailable={isChapterSegAvailable}
+				isChapterSegChecked={isChapterSegChecked}
+				messages={messages}
+				stopTimes={stopTimes}
+				handleChange={handleChange}
+				handleClickTime={handleClickTime}
+				remove={remove}
+				handleChaperCheckboxChange={handleChaperCheckboxChange}
+			/>
 
-			<Box
-				sx={{
-					height: 'auto',
-					margin: 'auto',
-					paddingBottom: '2rem',
-					width: '90%',
-				}}
-			>
-				<Button variant="contained" onClick={handleSubmit} sx={{ mt: 3, mb: 2, bgcolor: Colors.primaryColor }}>
-					Submit
-				</Button>
-			</Box>
+			<SubmitButton handleSubmit={handleSubmit} />
+			
+			{popup && popup.visible && (
+					<Popup 
+						title={popup.title}
+						icon={popup.icon}
+						handleClose={() => setPopup(null)}
+						text={popup.text}
+					/>
+				)}
 		</>
 	);
 }
