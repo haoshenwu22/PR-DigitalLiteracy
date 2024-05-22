@@ -1,12 +1,18 @@
 import React from 'react';
-import { Box, Grid, TextField, Button , Checkbox, FormControlLabel } from '@mui/material';
+import { Box, Grid, TextField, Button, Checkbox, FormControlLabel } from '@mui/material';
 import { Colors } from '../../../../constants/Colors.js';
 import { inputStyle, multiLineInputStyle } from '../../ResumeBuilder/styles.js';
 
-
-
-
-export default function MessageInputSection({ onAddBtnClick, isChapterSegAvailable, isChapterSegChecked, messages, handleChange, remove, handleClickTime, handleChaperCheckboxChange }) {
+export default function MessageInputSection({
+	onAddBtnClick,
+	isChapterSegAvailable,
+	isChapterSegChecked,
+	messages,
+	handleChange,
+	remove,
+	handleClickTime,
+	handleChaperCheckboxChange,
+}) {
 	const messageInput = messages.map((input, index) => (
 		<Box key={messages.length - index - 1}>
 			<Grid
@@ -105,10 +111,10 @@ export default function MessageInputSection({ onAddBtnClick, isChapterSegAvailab
 								width: '100%',
 								height: '100%',
 								fontSize: '16px',
-								backgroundColor: Colors.primaryColor, 
+								backgroundColor: Colors.primaryColor,
 								color: '#fff',
 								cursor: 'pointer',
-								fontWeight: 'bold', 
+								fontWeight: 'bold',
 							}}
 						>
 							Get Timestamp
@@ -162,62 +168,52 @@ export default function MessageInputSection({ onAddBtnClick, isChapterSegAvailab
 			</Grid>
 		</Box>
 	));
-	
+
 	return (
 		<Box
-				sx={{
-					backgroundColor: Colors.backgroundColor,
-					height: 'auto',
-					borderRadius: '1rem',
-					boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px',
-					margin: 'auto',
-					paddingBottom: '2rem',
-					width: '90%',
-					marginTop: '2rem',
-					'@media screen and (min-width: 1444px)': {
-						display: 'flex',
-						flexDirection: 'column', 
-						justifyContent: 'flex-start', 
-						alignItems: 'flex-start', 
-						marginTop: '2rem',
-						marginLeft: '2rem', 
-						width: '53%', 
-					},
-				}}
-			>
-				<Grid container spacing={2} sx={{ margin: 'auto', width: '97%' }}>
-					{isChapterSegAvailable && (
-						<Grid item xs={6}>
-							<FormControlLabel
-								control={<Checkbox checked={isChapterSegChecked} onChange={handleChaperCheckboxChange} />}
-								label="Use default segmentation from the video"
-							/>
+			sx={{
+				backgroundColor: Colors.backgroundColor,
+				height: 'auto',
+				borderRadius: '1rem',
+				boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px',
+				margin: 'auto',
+				paddingBottom: '2rem',
+				width: '90%',
+				marginTop: '2rem',
+			}}
+		>
+			<Grid container spacing={2} sx={{ margin: 'auto', width: '97%' }}>
+				{isChapterSegAvailable && (
+					<Grid item xs={6}>
+						<FormControlLabel
+							control={<Checkbox checked={isChapterSegChecked} onChange={handleChaperCheckboxChange} />}
+							label="Use default segmentation from the video"
+						/>
+					</Grid>
+				)}
+				{!isChapterSegChecked && (
+					<>
+						<Grid item xs={isChapterSegAvailable ? 6 : 12} style={{ textAlign: 'end' }}>
+							<Box
+								sx={{
+									color: Colors.primaryColor,
+									fontSize: { sm: '1rem', xs: '0.8rem' },
+									textAlign: 'end',
+									marginTop: '1rem',
+									paddingRight: '1rem',
+									cursor: 'pointer',
+								}}
+								onClick={onAddBtnClick}
+							>
+								+ Add a Segment
+							</Box>
 						</Grid>
-					)}
-					{!isChapterSegChecked && (
-						<>
-							<Grid item xs={isChapterSegAvailable ? 6 : 12} style={{ textAlign: 'end' }}>
-								<Box
-									sx={{
-										color: Colors.primaryColor,
-										fontSize: { sm: '1rem', xs: '0.8rem' },
-										textAlign: 'end',
-										marginTop: '1rem',
-										paddingRight: '1rem',
-										cursor: 'pointer',
-									}}
-									onClick={onAddBtnClick}
-								>
-									+ Add a Segment
-								</Box>
-							</Grid>
-							<Grid item xs={12}>
-								{messageInput}
-							</Grid>
-						</>
-					)}
-				</Grid>
-			</Box>
-	)
-
+						<Grid item xs={12}>
+							{messageInput}
+						</Grid>
+					</>
+				)}
+			</Grid>
+		</Box>
+	);
 }

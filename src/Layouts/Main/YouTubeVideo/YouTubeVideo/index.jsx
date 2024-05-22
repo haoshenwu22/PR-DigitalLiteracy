@@ -1,29 +1,12 @@
-import React, { useState, useEffect, useRef } from 'react'; 
+import React, { useState, useEffect, useRef } from 'react';
 import { addVideoData } from '../../../../firebase/firebaseReadWrite';
-import {
-	Box,
-	Grid,
-	FormControl,
-	FormControlLabel,
-	Checkbox,
-	InputLabel,
-	Select,
-	MenuItem,
-	TextField,
-	Button,
-	Divider,
-} from '@mui/material';
-import { TagsInput } from 'react-tag-input-component';
 import './styles.css';
-import Swal from 'sweetalert2';
-import ReactPlayer from 'react-player/youtube';
-import { set } from 'lodash';
 import Popup from './Popups/Popups';
 
 import MessageInputSection from './MessageInputSection';
-import SubmitButton from './SubmitButton.jsx';
-import VideoSection from './VideoSection.jsx';
-import YoutubeVideoInputSection from './VideoInputSection.jsx';
+import SubmitButton from './SubmitButton';
+import VideoSection from './VideoSection';
+import YoutubeVideoInputSection from './VideoInputSection';
 
 function YouTubeVideo() {
 	// Database Values
@@ -70,59 +53,57 @@ function YouTubeVideo() {
 	// whenever there is a new URL, fetch the chapters if it's a valid URL
 	useEffect(() => {
 		const fetchChapters = async () => {
-		try {
-			// check if the url is a valid youtube video and get the video id for the api
-			const videoIdRegex =
-			/(?:(?:https?:\/\/)?(?:www\.)?)?youtu(?:\.be\/|be.com\/(?:watch\?(?:.*&)?v=|(?:embed|v)\/))([\w'-]+)/i;
-			const match = url.match(videoIdRegex);
-			if (!match || !match[1]) {
-				setUrl('');
-				setPopup({
-					text: 'Please enter a valid YouTube video URL.',
-					visible: true,
-					title: 'Oops...',
-					icon: 'error',
-				});
-				return;
+			try {
+				// check if the url is a valid youtube video and get the video id for the api
+				const videoIdRegex =
+					/(?:(?:https?:\/\/)?(?:www\.)?)?youtu(?:\.be\/|be.com\/(?:watch\?(?:.*&)?v=|(?:embed|v)\/))([\w'-]+)/i;
+				const match = url.match(videoIdRegex);
+				if (!match || !match[1]) {
+					setUrl('');
+					setPopup({
+						text: 'Please enter a valid YouTube video URL.',
+						visible: true,
+						title: 'Oops...',
+						icon: 'error',
+					});
+					return;
+				}
+
+				// fetch the data from the youtube api
+				const response = await fetch(
+					`https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${match[1]}&key=${process.env.REACT_APP_YOUTUBE_API_KEY}`,
+				);
+
+				// parse the data for the chapters
+				const data = await response.json();
+				const video = data.items[0];
+
+				const desc = video.snippet.description;
+				const lines = desc.split('\n');
+				const filteredLines = lines.filter((line) => /^\s*\d+:\d+/.test(line));
+
+				// if there are chapter then setIsChapterSegAvailable true which will unhide the checkbox
+				if (filteredLines.length > 0) {
+					setIsChapterSegAvailable(true);
+
+					const updatedStopTimes = filteredLines.map((line) => convertToSeconds(line.split(' ')[0]));
+					updatedStopTimes.shift();
+					const updatedMessages = filteredLines.map(() => 'Are you following along so far?');
+
+					setChapterStopTimes(updatedStopTimes);
+					setChapterMessage(updatedMessages);
+				} else {
+					setIsChapterSegAvailable(false);
+				}
+			} catch (error) {
+				console.log(error);
+				alert(error);
 			}
-
-			// fetch the data from the youtube api
-			const response = await fetch(
-				`https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${(match[1])}&key=${
-					process.env.REACT_APP_YOUTUBE_API_KEY
-				}`,
-			);
-
-			// parse the data for the chapters
-			const data = await response.json();
-			const video = data.items[0];
-
-			const desc = video.snippet.description;
-			const lines = desc.split('\n');
-			const filteredLines = lines.filter((line) => /^\s*\d+:\d+/.test(line));
-
-			// if there are chapter then setIsChapterSegAvailable true which will unhide the checkbox
-			if (filteredLines.length > 0) {
-				setIsChapterSegAvailable(true);
-
-				const updatedStopTimes = filteredLines.map((line) => convertToSeconds(line.split(' ')[0]));
-				updatedStopTimes.shift();
-				const updatedMessages = filteredLines.map(() => 'Are you following along so far?');
-
-				setChapterStopTimes(updatedStopTimes);
-				setChapterMessage(updatedMessages);
-			} else {
-				setIsChapterSegAvailable(false);
-			}
-		} catch (error) {
-			console.log(error);
-			alert(error);
+		};
+		if (url) {
+			setIsChapterSegChecked(false);
+			fetchChapters();
 		}
-	};
-	if (url) {
-		setIsChapterSegChecked(false);
-		fetchChapters();
-	}
 	}, [url]);
 
 	const handleSubmit = async (e) => {
@@ -137,32 +118,32 @@ function YouTubeVideo() {
 
 		if (isChapterSegChecked) {
 			e.preventDefault();
-				try {
-					await addVideoData('youtube-videos', {
-						url,
-						tags,
-						operating_system: operatingSystem,
-						category,
-						stopTimes: chapterStopTimes,
-						messages: chapterMessages,
-					});
+			try {
+				await addVideoData('youtube-videos', {
+					url,
+					tags,
+					operating_system: operatingSystem,
+					category,
+					stopTimes: chapterStopTimes,
+					messages: chapterMessages,
+				});
 
-					setUrl('');
-					setTags([]);
-					setOs('');
-					setCategory('');
-					setStopTimes([{ stopTimes: '' }]);
-					setMessage([{ message: '' }]);
-					// set checked to false
-					setIsChapterSegChecked(false);
-					setIsChapterSegAvailable(false);
+				setUrl('');
+				setTags([]);
+				setOs('');
+				setCategory('');
+				setStopTimes([{ stopTimes: '' }]);
+				setMessage([{ message: '' }]);
+				// set checked to false
+				setIsChapterSegChecked(false);
+				setIsChapterSegAvailable(false);
 
-					setPopup({
-						text: 'Video added successfully!',
-						visible: true,
-						icon: 'success',
-					});
-				} catch (error) {
+				setPopup({
+					text: 'Video added successfully!',
+					visible: true,
+					icon: 'success',
+				});
+			} catch (error) {
 				console.log('Error adding video:', error);
 				alert(error);
 			}
@@ -174,7 +155,6 @@ function YouTubeVideo() {
 			}
 
 			sortStopTimes();
-
 
 			e.preventDefault();
 
@@ -221,7 +201,7 @@ function YouTubeVideo() {
 		}
 	};
 
-	const sortStopTimes= () => {
+	const sortStopTimes = () => {
 		// console.log("before stopTimes: " + stopTimes + "\nmessages: " + messages);
 		for (let i = 0; i < messages.length - 1; i++) {
 			for (let j = i + 1; j < messages.length; j++) {
@@ -239,7 +219,7 @@ function YouTubeVideo() {
 		setStopTimes(stopTimes);
 		setMessage(messages);
 		// console.log("after stopTimes: " + stopTimes + "\nmessages: " + messages);
-	}
+	};
 
 	// added for tags validation
 	const [tagInputValue, setTagInputValue] = useState('');
@@ -333,10 +313,11 @@ function YouTubeVideo() {
 				const temp = regex.test(textField.value);
 
 				if (!temp) {
-					Swal.fire({
-						icon: 'error',
-						title: 'Oops...',
+					setPopup({
 						text: 'Please ensure all stop times are in a valid MM:SS format.',
+						visible: true,
+						title: 'Oops...',
+						icon: 'error',
 					});
 					return false;
 				}
@@ -420,36 +401,39 @@ function YouTubeVideo() {
 	};
 
 	return (
-		<>
-			<VideoSection playerRef={playerRef} url={url} />
-		
-			<YoutubeVideoInputSection setUrl={setUrl} tags={tags} handleTagsKeyPress={handleTagsKeyPress} setTags={setTags} setOs={setOs} operatingSystem={operatingSystem} setCategory={setCategory} />
-			
+		<div className="grid grid-cols-5">
+			<section className="col-span-3 bg-red-500">
+				<YoutubeVideoInputSection
+					setUrl={setUrl}
+					tags={tags}
+					handleTagsKeyPress={handleTagsKeyPress}
+					setTags={setTags}
+					setOs={setOs}
+					operatingSystem={operatingSystem}
+					setCategory={setCategory}
+				/>
 
-			{/* Altering this to have a checkbox that hides it -ben */}
-			<MessageInputSection
-				onAddBtnClick={onAddBtnClick}
-				isChapterSegAvailable={isChapterSegAvailable}
-				isChapterSegChecked={isChapterSegChecked}
-				messages={messages}
-				stopTimes={stopTimes}
-				handleChange={handleChange}
-				handleClickTime={handleClickTime}
-				remove={remove}
-				handleChaperCheckboxChange={handleChaperCheckboxChange}
-			/>
+				<MessageInputSection
+					onAddBtnClick={onAddBtnClick}
+					isChapterSegAvailable={isChapterSegAvailable}
+					isChapterSegChecked={isChapterSegChecked}
+					messages={messages}
+					stopTimes={stopTimes}
+					handleChange={handleChange}
+					handleClickTime={handleClickTime}
+					remove={remove}
+					handleChaperCheckboxChange={handleChaperCheckboxChange}
+				/>
 
-			<SubmitButton handleSubmit={handleSubmit} />
-			
+				<SubmitButton handleSubmit={handleSubmit} />
+			</section>
+			<section className="col-span-2">
+				<VideoSection playerRef={playerRef} url={url} />
+			</section>
 			{popup && popup.visible && (
-					<Popup 
-						title={popup.title}
-						icon={popup.icon}
-						handleClose={() => setPopup(null)}
-						text={popup.text}
-					/>
-				)}
-		</>
+				<Popup title={popup.title} icon={popup.icon} handleClose={() => setPopup(null)} text={popup.text} />
+			)}
+		</div>
 	);
 }
 
