@@ -26,8 +26,12 @@ export const updateData = async (docRef, docData) => {
 
 export const addVideoData = async (collectionName, docData) => {
 	try {
-		const docRef = addDoc(collection(db, collectionName), docData);
+		const docRef = await addDoc(collection(db, collectionName), docData);
 		console.log('Document added with ID: ', docRef.id);
+
+		await updateDoc(docRef, { 
+            key: docRef.id 
+        });
 	} catch (e) {
 		console.log('Error adding document:', e);
 	}
