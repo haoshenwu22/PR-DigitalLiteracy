@@ -4,7 +4,7 @@ import './styles.css';
 import Popup from './Components/Popups';
 
 import MessageInputSection from './Layouts/MessageInputSection';
-import SubmitButton from './SubmitButton';
+import SubmitButton from './Components/SubmitButton';
 import VideoSection from './Layouts/VideoSection';
 import YoutubeVideoInputSection from './Layouts/VideoInputSection';
 
