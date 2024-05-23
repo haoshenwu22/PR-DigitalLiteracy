@@ -34,6 +34,7 @@ export default function MessageInputSection({
 						headerText="Stop Times:"
 						placeHolder="Specify pause times for video in format min:sec, e.g. 0:30"
 						value={input.stopTime}
+						eventName="stopTimes"
 						onChangeFunction={handleChange}
 						id={{
 							value: messages.length - index - 1,
@@ -61,6 +62,7 @@ export default function MessageInputSection({
 						tag: 'confirmationTextField_',
 					}}
 					onChangeFunction={handleChange}
+					eventName="messages"
 				/>
 			</div>
 		</div>

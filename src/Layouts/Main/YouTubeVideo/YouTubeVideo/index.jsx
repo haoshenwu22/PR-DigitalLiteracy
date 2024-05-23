@@ -401,6 +401,8 @@ function YouTubeVideo() {
 			message[index] = event.target.value;
 			// alert("message is: " + message + "\nIndex is: " + index);
 		}
+		console.log('stopTime: ', stopTime);
+		console.log('message: ', message);
 		setStopTimes(stopTime);
 		setMessage(message);
 	};

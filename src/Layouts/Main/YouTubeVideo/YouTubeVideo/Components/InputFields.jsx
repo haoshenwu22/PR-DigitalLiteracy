@@ -4,7 +4,7 @@ import { TagsInput } from 'react-tag-input-component';
 import PropTypes from 'prop-types';
 import { inputStyle, multiLineInputStyle } from '../../../ResumeBuilder/styles';
 
-export default function InputField({ headerText, placeHolder, value, onChangeFunction, id }) {
+export default function InputField({ headerText, placeHolder, value, onChangeFunction, id, eventName }) {
 	const handleInputChange = (event) => {
 		if (id) {
 			onChangeFunction(id.value, event);
@@ -34,6 +34,7 @@ export default function InputField({ headerText, placeHolder, value, onChangeFun
 							disableUnderline: true,
 						}}
 						onChange={handleInputChange}
+						name={eventName}
 						focused
 					/>
 				</Box>
@@ -51,13 +52,14 @@ InputField.propTypes = {
 		value: PropTypes.number.isRequired,
 		tag: PropTypes.string.isRequired,
 	}),
+	eventName: PropTypes.string.isRequired,
 };
 
 InputField.defaultProps = {
 	id: null,
 };
 
-export function TagsInputField({ headerText, placeHolder, value, onChangeFunction, onKeyUpFunction }) {
+export function TagsInputField({ headerText, placeHolder, value, onChangeFunction, onKeyUpFunction, eventName }) {
 	return (
 		<div className="flex items-center gap-2">
 			<div className="text-primaryColor font-semibold font-sans w-28">{headerText}</div>
@@ -81,6 +83,7 @@ export function TagsInputField({ headerText, placeHolder, value, onChangeFunctio
 						onChange={onChangeFunction}
 						placeHolder={placeHolder}
 						onKeyUp={onKeyUpFunction}
+						name={eventName}
 					/>
 				</Box>
 			</div>
@@ -94,6 +97,7 @@ TagsInputField.propTypes = {
 	value: PropTypes.arrayOf(PropTypes.string).isRequired,
 	onChangeFunction: PropTypes.func.isRequired,
 	onKeyUpFunction: PropTypes.func.isRequired,
+	eventName: PropTypes.string.isRequired,
 };
 
 export function DropdownInputField({ headerText, inputLabel, value, onChangeFunction, MenuItems }) {
@@ -134,7 +138,7 @@ DropdownInputField.propTypes = {
 	MenuItems: PropTypes.arrayOf(PropTypes.element).isRequired,
 };
 
-export function TextInputField({ headerText, value, onChangeFunction, id }) {
+export function TextInputField({ headerText, value, onChangeFunction, id, eventName }) {
 	const handleInputChange = (event) => {
 		if (id) {
 			onChangeFunction(id.value, event);
@@ -160,7 +164,7 @@ export function TextInputField({ headerText, value, onChangeFunction, id }) {
 						variant="standard"
 						multiline
 						value={value}
-						name="messages"
+						name={eventName}
 						InputProps={{
 							id: id ? `${id.tag}${id.value}` : '',
 							disableUnderline: true,
@@ -182,6 +186,7 @@ TextInputField.propTypes = {
 		value: PropTypes.number.isRequired,
 		tag: PropTypes.string.isRequired,
 	}),
+	eventName: PropTypes.string.isRequired,
 };
 
 TextInputField.defaultProps = {

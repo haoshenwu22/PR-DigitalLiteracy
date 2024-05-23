@@ -28,6 +28,7 @@ export default function VideoInputSection({
 					placeHolder="Input Youtube Video Url"
 					value={inputValue}
 					onChangeFunction={setUrl}
+					eventName="youtubeLink"
 				/>
 
 				<TagsInputField
@@ -36,6 +37,7 @@ export default function VideoInputSection({
 					value={tags}
 					onChangeFunction={setTags}
 					onKeyUpFunction={handleTagsKeyPress}
+					eventName="tags"
 				/>
 
 				<DropdownInputField
