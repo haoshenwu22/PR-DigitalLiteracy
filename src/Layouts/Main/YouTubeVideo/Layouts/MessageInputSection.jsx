@@ -45,7 +45,7 @@ export default function MessageInputSection({
 				<div>
 					<button
 						type="button"
-						className="bg-primaryColor text-white font-semibold font-sans h-10 px-2 rounded-lg"
+						className="bg-primaryColor text-white font-semibold font-sans h-10 px-2 rounded-lg whitespace-nowrap"
 						onClick={(e) => handleClickTime(index, e)}
 					>
 						Get Timestamp
@@ -69,7 +69,7 @@ export default function MessageInputSection({
 	));
 
 	return (
-		<div className="bg-backgroundColor shadow-2xl rounded-xl py-12 px-12">
+		<div className="bg-backgroundColor shadow-md rounded-xl py-12 px-12">
 			<div className="flex flex-col gap-6">
 				<div className="flex justify-between items-center">
 					<div>

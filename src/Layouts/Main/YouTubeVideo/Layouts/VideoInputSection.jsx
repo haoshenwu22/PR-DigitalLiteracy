@@ -21,7 +21,7 @@ export default function VideoInputSection({
 	}, [url]); // Trigger update when the parent's value changes
 
 	return (
-		<div className="bg-backgroundColor shadow-2xl rounded-xl py-12 px-12">
+		<div className="bg-backgroundColor shadow-md rounded-xl py-12 px-12">
 			<div className="flex flex-col gap-6">
 				<InputField
 					headerText="Youtube Link:"

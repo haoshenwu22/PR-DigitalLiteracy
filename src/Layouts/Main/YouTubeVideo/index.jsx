@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { addVideoData } from '../../../../firebase/firebaseReadWrite';
+import { addVideoData } from '../../../firebase/firebaseReadWrite';
 import './styles.css';
 import Popup from './Components/Popups';
 
@@ -408,8 +408,8 @@ function YouTubeVideo() {
 	};
 
 	return (
-		<div className="md:grid md:grid-cols-5">
-			<section className="mb-8 md:mb-0 md:col-span-2 md:order-2">
+		<div className="lg:grid lg:grid-cols-5">
+			<section className="mb-8 lg:mb-0 lg:col-span-2 lg:order-2">
 				<VideoSection playerRef={playerRef} url={url} />
 			</section>
 			<section className="col-span-3 mb-8 flex flex-col gap-4 px-4">

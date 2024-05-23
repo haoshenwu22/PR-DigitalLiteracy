@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 export default function VideoSection({ playerRef, url }) {
 	return (
-		<div className="sticky top-32 bg-backgroundColor shadow-xl">
+		<div className="sticky top-32 bg-backgroundColor shadow-md mx-12 md:mx-20 lg:mx-0 lg:mr-4">
 			<div style={{ aspectRatio: '16/9' }}>
 				<ReactPlayer
 					ref={playerRef}

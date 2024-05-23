@@ -2,7 +2,7 @@ import React from 'react';
 import { Box, TextField, FormControl, InputLabel, Select } from '@mui/material';
 import { TagsInput } from 'react-tag-input-component';
 import PropTypes from 'prop-types';
-import { inputStyle, multiLineInputStyle } from '../../../ResumeBuilder/styles';
+import { inputStyle, multiLineInputStyle } from '../../ResumeBuilder/styles';
 
 export default function InputField({ headerText, placeHolder, value, onChangeFunction, id, eventName }) {
 	const handleInputChange = (event) => {
@@ -15,7 +15,7 @@ export default function InputField({ headerText, placeHolder, value, onChangeFun
 
 	return (
 		<div className="flex items-center gap-2 ">
-			<div className="text-primaryColor font-semibold font-sans w-28">{headerText}</div>
+			<div className="text-primaryColor font-semibold font-sans w-20">{headerText}</div>
 			<div className="grow">
 				<Box
 					component="form"
@@ -62,7 +62,7 @@ InputField.defaultProps = {
 export function TagsInputField({ headerText, placeHolder, value, onChangeFunction, onKeyUpFunction, eventName }) {
 	return (
 		<div className="flex items-center gap-2">
-			<div className="text-primaryColor font-semibold font-sans w-28">{headerText}</div>
+			<div className="text-primaryColor font-semibold font-sans w-20">{headerText}</div>
 			<div className="grow">
 				<Box
 					component="form"
@@ -103,7 +103,7 @@ TagsInputField.propTypes = {
 export function DropdownInputField({ headerText, inputLabel, value, onChangeFunction, MenuItems }) {
 	return (
 		<div className="flex items-center gap-2">
-			<div className="text-primaryColor font-semibold font-sans w-28">{headerText}</div>
+			<div className="text-primaryColor font-semibold font-sans w-20">{headerText}</div>
 			<div className="grow">
 				<Box
 					component="form"
@@ -149,7 +149,7 @@ export function TextInputField({ headerText, value, onChangeFunction, id, eventN
 	return (
 		<div className="flex items-center gap-2 bg-red-400">
 			{headerText && ( // Conditionally render the header div
-				<div className="text-primaryColor font-semibold font-sans w-28">{headerText}</div>
+				<div className="text-primaryColor font-semibold font-sans w-20">{headerText}</div>
 			)}
 			<div className="grow">
 				<Box
