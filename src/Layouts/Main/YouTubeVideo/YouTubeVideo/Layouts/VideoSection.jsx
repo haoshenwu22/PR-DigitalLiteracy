@@ -1,10 +1,10 @@
-import React from 'react'; // Correctly import React and useRef
-import { Box } from '@mui/material';
+import React from 'react';
 import ReactPlayer from 'react-player/youtube';
+import PropTypes from 'prop-types';
 
 export default function VideoSection({ playerRef, url }) {
 	return (
-		<div className="sticky top-32 bg-slate-200 shadow-xl">
+		<div className="sticky top-32 bg-backgroundColor shadow-xl">
 			<div style={{ aspectRatio: '16/9' }}>
 				<ReactPlayer
 					ref={playerRef}
@@ -25,3 +25,8 @@ export default function VideoSection({ playerRef, url }) {
 		</div>
 	);
 }
+
+VideoSection.propTypes = {
+	playerRef: PropTypes.oneOfType([PropTypes.func, PropTypes.object]).isRequired,
+	url: PropTypes.string.isRequired,
+};

@@ -12,6 +12,12 @@ module.exports = {
 	darkMode: 'class', // or 'media' or 'class'
 	theme: {
 		extend: {
+			colors: {
+				'primaryColor': '#053254',
+				'primaryColorLight': '#053254CC',
+				'backgroundColor': '#ECF4FA',
+				'customGray': '#D3D3D3',
+			},
 			boxShadow: {
 				0: 'none',
 				1: '0 1px 1px 0 rgba(0,0,0,0.14), 0 2px 1px -1px rgba(0,0,0,0.12), 0 1px 3px 0 rgba(0,0,0,0.20)',

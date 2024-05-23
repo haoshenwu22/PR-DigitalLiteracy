@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { addVideoData } from '../../../../firebase/firebaseReadWrite';
 import './styles.css';
-import Popup from './Popups/Popups';
+import Popup from './Components/Popups';
 
-import MessageInputSection from './MessageInputSection';
+import MessageInputSection from './Layouts/MessageInputSection';
 import SubmitButton from './SubmitButton';
-import VideoSection from './VideoSection';
-import YoutubeVideoInputSection from './VideoInputSection';
+import VideoSection from './Layouts/VideoSection';
+import YoutubeVideoInputSection from './Layouts/VideoInputSection';
 
 function YouTubeVideo() {
 	// Database Values
@@ -60,12 +60,14 @@ function YouTubeVideo() {
 				const match = url.match(videoIdRegex);
 				if (!match || !match[1]) {
 					setUrl('');
+					setIsChapterSegAvailable(false);
 					setPopup({
 						text: 'Please enter a valid YouTube video URL.',
 						visible: true,
 						title: 'Oops...',
 						icon: 'error',
 					});
+					console.log('Invalid URL', url);
 					return;
 				}
 
@@ -100,6 +102,7 @@ function YouTubeVideo() {
 				alert(error);
 			}
 		};
+		console.log('new', url);
 		if (url) {
 			setIsChapterSegChecked(false);
 			fetchChapters();
@@ -387,6 +390,8 @@ function YouTubeVideo() {
 	};
 
 	const handleChange = (index, event) => {
+		console.log('index: ', index);
+		console.log('event: ', event.target.value);
 		const stopTime = [...stopTimes];
 		const message = [...messages];
 		if (event.target.name === 'stopTimes') {
@@ -401,19 +406,25 @@ function YouTubeVideo() {
 	};
 
 	return (
-		<div className="grid grid-cols-5">
-			<section className="col-span-3 bg-red-500">
+		<div className="md:grid md:grid-cols-5">
+			<section className="mb-8 md:mb-0 md:col-span-2 md:order-2">
+				<VideoSection playerRef={playerRef} url={url} />
+			</section>
+			<section className="col-span-3 mb-8 flex flex-col gap-4 px-4">
 				<YoutubeVideoInputSection
+					url={url}
 					setUrl={setUrl}
-					tags={tags}
 					handleTagsKeyPress={handleTagsKeyPress}
+					tags={tags}
 					setTags={setTags}
-					setOs={setOs}
 					operatingSystem={operatingSystem}
+					setOs={setOs}
+					category={category}
 					setCategory={setCategory}
 				/>
 
 				<MessageInputSection
+					url={url}
 					onAddBtnClick={onAddBtnClick}
 					isChapterSegAvailable={isChapterSegAvailable}
 					isChapterSegChecked={isChapterSegChecked}
@@ -426,9 +437,6 @@ function YouTubeVideo() {
 				/>
 
 				<SubmitButton handleSubmit={handleSubmit} />
-			</section>
-			<section className="col-span-2">
-				<VideoSection playerRef={playerRef} url={url} />
 			</section>
 			{popup && popup.visible && (
 				<Popup title={popup.title} icon={popup.icon} handleClose={() => setPopup(null)} text={popup.text} />
