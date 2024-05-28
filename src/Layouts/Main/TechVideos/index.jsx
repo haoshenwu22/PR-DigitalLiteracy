@@ -91,26 +91,24 @@ function TechVideos({ initialPageContent, introText }) {
 	};
 
 	return (
-		<div>
+		<div className="relative md:grid md:grid-cols-[max-content_1fr] min-h-screen">
 			<FilterPanel filterGroups={filterGroups} onSave={onSave} appliedFilterTags={appliedFilterTags} />
 
-			<div className="md:pl-80">
-				<Box sx={{ margin: '0% 10%' }}>
+			<div className="md:mx-8 md:flex-1 md:items-center">
+				<div className="pb-6">
 					<Intro introText={introText} />
-				</Box>
-
-				<Box className="mx-32" style={{ paddingBottom: '2rem' }}>
-					<SearchBar tagsFromSearchBar={tagsFromSearchBar} tags={tags} />
-					<Breadcrumb
-						subtopicValue={subtopicValue}
-						handleResetSubtopic={handleResetSubtopic}
-						subtopics={displayedSubtopics}
-					/>
-				</Box>
-
+					<div className="mx-auto max-w-xl">
+						<SearchBar tagsFromSearchBar={tagsFromSearchBar} tags={tags} />
+						<Breadcrumb
+							subtopicValue={subtopicValue}
+							handleResetSubtopic={handleResetSubtopic}
+							subtopics={displayedSubtopics}
+						/>
+					</div>
+				</div>
 				{/* if there is are no subtopics, a subtopic is selected, or someone searched a tag in the search bar display videos */}
 				{displayedSubtopics.length === 0 || subtopicValue.length > 0 || tags.length > 0 ? (
-					<div className="flex mx-32 justify-center">
+					<div className="flex justify-center">
 						<YouTubeVideoSection
 							osvalue={videoValue}
 							subtopicValue={subtopicValue}
@@ -119,7 +117,7 @@ function TechVideos({ initialPageContent, introText }) {
 						/>
 					</div>
 				) : (
-					<div className="flex mx-32 justify-center">
+					<div className="flex justify-center">
 						<SubtopicSelection dataFromSubtopicSelector={dataFromSubtopicSelector} subtopics={displayedSubtopics} />
 					</div>
 				)}

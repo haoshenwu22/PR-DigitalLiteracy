@@ -15,7 +15,7 @@ export default function SubtopicSelector({ subtopics, dataFromSubtopicSelector }
 	};
 
 	return (
-		<div className="h-full w-full grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 max-w-screen-xl">
+		<div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
 			{subtopics.map((subtopic) => (
 				<div
 					className="h-72 w-full rounded-xl cursor-pointer shadow-1 hover:shadow-12 hover:scale-105 duration-150 p-8 justify-center items-center place-items-center grid "
