@@ -92,9 +92,7 @@ function TechVideos({ initialPageContent, introText }) {
 
 	return (
 		<div className="relative md:grid md:grid-cols-[max-content_1fr] min-h-screen">
-			<div className="md:sticky md:top-28 md:overflow-y-auto md:max-h-screen md:border-r md:border-gray-200 ">
-				<FilterPanel filterGroups={filterGroups} onSave={onSave} appliedFilterTags={appliedFilterTags} />
-			</div>
+			<FilterPanel filterGroups={filterGroups} onSave={onSave} appliedFilterTags={appliedFilterTags} />
 
 			<div className="md:mx-8 md:flex-1 md:items-center">
 				<div className="pb-6">

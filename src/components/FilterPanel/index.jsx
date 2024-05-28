@@ -18,7 +18,7 @@ const FilterPanel = ({ filterGroups, onSave, appliedFilterTags }) => (
 		<div className="md:hidden">
 			<FilterPanelMobile filterGroups={filterGroups} onSave={onSave} appliedFilterTags={appliedFilterTags} />
 		</div>
-		<div className="hidden md:flex">
+		<div className="hidden md:flex md:sticky md:top-28 md:overflow-y-auto md:max-h-screen md:border-r md:border-gray-200 ">
 			<FilterPanelDesktop filterGroups={filterGroups} onSave={onSave} appliedFilterTags={appliedFilterTags} />
 		</div>
 	</div>
