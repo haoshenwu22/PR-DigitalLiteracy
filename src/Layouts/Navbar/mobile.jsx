@@ -49,14 +49,6 @@ const MobileDrawer = (props) => {
 				</ListItemButton>
 			</ListItem>
 			<ListItem disablePadding>
-				<ListItemButton component={Link} to="/help" onClick={onClose}>
-					<ListItemIcon>
-						<QuestionAnswer />
-					</ListItemIcon>
-					<ListItemText primary="Ask a Question" />
-				</ListItemButton>
-			</ListItem>
-			<ListItem disablePadding>
 				<ListItemButton component="a" href="https://www.findhelp.org" onClick={onClose}>
 					<ListItemIcon>
 						<LocationOnIcon />
