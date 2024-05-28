@@ -13,13 +13,16 @@ import {
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
-const FilterPanel = ({ filterGroups, onSave, appliedFilterTags }) => {
-	const isMobile = useMediaQuery('(max-width: 768px)');
-	if (isMobile) {
-		return <FilterPanelMobile filterGroups={filterGroups} onSave={onSave} appliedFilterTags={appliedFilterTags} />;
-	}
-	return <FilterPanelDesktop filterGroups={filterGroups} onSave={onSave} appliedFilterTags={appliedFilterTags} />;
-};
+const FilterPanel = ({ filterGroups, onSave, appliedFilterTags }) => (
+	<div>
+		<div className="md:hidden">
+			<FilterPanelMobile filterGroups={filterGroups} onSave={onSave} appliedFilterTags={appliedFilterTags} />
+		</div>
+		<div className="hidden md:flex">
+			<FilterPanelDesktop filterGroups={filterGroups} onSave={onSave} appliedFilterTags={appliedFilterTags} />
+		</div>
+	</div>
+);
 
 const FilterPanelMobile = ({ filterGroups, onSave, appliedFilterTags }) => {
 	const [isOpen, setIsOpen] = useState(false);
@@ -45,7 +48,7 @@ const FilterPanelMobile = ({ filterGroups, onSave, appliedFilterTags }) => {
 					keepMounted: true, // Better open performance on mobile
 				}}
 				sx={{
-					display: { xs: 'block', sm: 'none' },
+					display: { xs: 'block', lg: 'none' },
 					'& .MuiDrawer-paper': { boxSizing: 'border-box', width: 240, padding: '20px' },
 				}}
 			>
@@ -56,7 +59,7 @@ const FilterPanelMobile = ({ filterGroups, onSave, appliedFilterTags }) => {
 };
 
 const FilterPanelDesktop = ({ filterGroups, onSave, appliedFilterTags }) => (
-	<div className="fixed left-0 top-24 bottom-0 w-80 p-8 border-r border-gray-100 shadow-4 bg-white">
+	<div className="w-80 px-8">
 		<FilterPanelContent filterGroups={filterGroups} onSave={onSave} appliedFilterTags={appliedFilterTags} />
 	</div>
 );
@@ -67,7 +70,7 @@ const FilterPanelContent = ({ filterGroups, onSave, appliedFilterTags }) => {
 	return (
 		<>
 			{/* <h2 className="text-xl mb-8">Filter By</h2> */}
-			{filterGroups.map(({ subheading, filters, database_field }) => (
+			{filterGroups.map(({ subheading, filters }) => (
 				<Accordion defaultExpanded key={subheading}>
 					<AccordionSummary expandIcon={<ExpandMoreIcon />}>
 						<span className="ml-4">{subheading}</span>
@@ -98,7 +101,7 @@ const FilterPanelContent = ({ filterGroups, onSave, appliedFilterTags }) => {
 					</AccordionDetails>
 				</Accordion>
 			))}
-			<div className="fixed bottom-0 w-64 py-8">
+			<div>
 				<Button variant="contained" fullWidth onClick={() => onSave(seletedFilterTags)}>
 					Apply
 				</Button>
