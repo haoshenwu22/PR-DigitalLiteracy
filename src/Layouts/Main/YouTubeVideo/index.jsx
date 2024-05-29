@@ -14,6 +14,7 @@ function YouTubeVideo() {
 	const [tags, setTags] = useState([]);
 	const [operatingSystem, setOs] = useState('');
 	const [category, setCategory] = useState('');
+	const [subtopic, setSubtopic] = useState(undefined);
 	const [messages, setMessage] = useState([
 		{
 			messages: '',
@@ -127,6 +128,7 @@ function YouTubeVideo() {
 					tags,
 					operating_system: operatingSystem,
 					category,
+					subtopic,
 					stopTimes: chapterStopTimes,
 					messages: chapterMessages,
 				});
@@ -135,6 +137,7 @@ function YouTubeVideo() {
 				setTags([]);
 				setOs('');
 				setCategory('');
+				setSubtopic('');
 				setStopTimes([{ stopTimes: '' }]);
 				setMessage([{ message: '' }]);
 				// set checked to false
@@ -170,6 +173,7 @@ function YouTubeVideo() {
 					tags,
 					operating_system: operatingSystem,
 					category,
+					subtopic,
 					stopTimes,
 					messages,
 				});
@@ -178,6 +182,7 @@ function YouTubeVideo() {
 				setTags([]);
 				setOs('');
 				setCategory('');
+				setSubtopic('');
 				setStopTimes([{ stopTimes: '' }]);
 				setMessage([{ message: '' }]);
 
@@ -274,6 +279,18 @@ function YouTubeVideo() {
 		if (category === '') {
 			setPopup({
 				text: 'Please select a video category.',
+				title: 'Oops...',
+				visible: true,
+				icon: 'error',
+			});
+			return false;
+		}
+		console.log('subtopic: ', subtopic);
+
+		// check subtopic. If the database has no subtopics it allows the video to be added. This should be removed if we want to enforce subtopics either by adding them to the database in a seperate table or allowing their creation.
+		if (subtopic === '' && subtopic !== undefined) {
+			setPopup({
+				text: 'Please select a subtopic.',
 				title: 'Oops...',
 				visible: true,
 				icon: 'error',
@@ -423,6 +440,8 @@ function YouTubeVideo() {
 					setOs={setOs}
 					category={category}
 					setCategory={setCategory}
+					subtopic={subtopic}
+					setSubtopic={setSubtopic}
 				/>
 
 				<MessageInputSection

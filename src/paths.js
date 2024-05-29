@@ -14,7 +14,8 @@ const PATHS = {
 	resumeBuilder: '/resumeBuilder',
 	userInformation: '/userInformation',
 	generateResume: '/generateResume',
-	addYoutubeVideos: '/addYoutubeVideos',
+	addVideos: '/addVideos',
+	removeVideos: '/removeVideos',
 	helpManager: '/helpManager',
 };
 

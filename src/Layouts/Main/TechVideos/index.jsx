@@ -1,29 +1,32 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Box } from '@mui/material';
-import { collection, onSnapshot } from 'firebase/firestore';
-import { db } from '../../../firebase/firebase';
 
 import Breadcrumb from '../../../components/Video/Breadcrumb';
 import FilterPanel from '../../../components/FilterPanel';
 import SearchBar from '../../../components/Video/Searchbar';
 import SubtopicSelection from '../../../components/Video/SubtopicSelection';
 import YouTubeVideoSection from '../../../components/Video/YouTubeVideoSection';
-import getVideosFromFirebaseData from '../../../utils/Firebase/getVideosFromFirebaseData';
+import { fetchVideosFromFirebase, fetchTopicsAndSubtopics } from '../../../firebase/firebaseReadWrite';
 import Intro from '../../../components/Video/Intro';
-import { FILTERGROUPS, SUBTOPICGROUPS } from './constants';
+import { FILTERGROUPS } from './constants';
 
 function TechVideos({ initialPageContent, introText }) {
 	// FINAL values that should be refactored out at some point
 	// side filter options unsorted tuple (label, database_value) array
 	const [filterGroups] = useState(() => FILTERGROUPS);
 
-	const [subtopicGroups] = useState(() => SUBTOPICGROUPS);
+	const subtopicGroups = fetchTopicsAndSubtopics();
+	const [displayedSubtopics, setDisplayedSubtopics] = useState([]); // Start with empty
+
+	useEffect(() => {
+		if (!subtopicGroups) return;
+		const initialSubtopics = subtopicGroups.find(([value]) => value === initialPageContent)?.[1] || [];
+		setDisplayedSubtopics(initialSubtopics);
+	}, [initialPageContent, subtopicGroups]); // Add initialPageContent as a dependency
 
 	// video database values
-	const [videoValue, setVideoValue] = useState([]);
-	const [dataFromFirebase, setDatafromFirebase] = useState([]);
-	const docRef = collection(db, 'youtube-videos');
+	const videoValue = fetchVideosFromFirebase();
+	console.log('videoValue:', videoValue);
 
 	// video search constants
 	const [subtopicValue, setsubtopicValue] = useState([]); // current subtopic selected
@@ -38,27 +41,6 @@ function TechVideos({ initialPageContent, introText }) {
 				: filters.map(([, value]) => value),
 		),
 	);
-
-	// displays subtopics based on the content type selected
-	const [displayedSubtopics, setDisplayedSubtopics] = useState(
-		subtopicGroups.find(([value]) => value === initialPageContent)?.[1] || [],
-	);
-
-	// subscribe to changes when a Firestore document referenced
-	useEffect(() => {
-		console.log('useEffect 1');
-		const unsubscribe = onSnapshot(docRef, (querySnapshot) => {
-			const videos = querySnapshot.docs.map((doc) => doc.data());
-			setDatafromFirebase(Object.values(videos));
-		});
-
-		return unsubscribe;
-		// eslint-disable-next-line
-	}, []);
-
-	useEffect(() => {
-		getVideosFromFirebaseData(dataFromFirebase, setVideoValue);
-	}, [dataFromFirebase]);
 
 	// set value from user clicking on subtopic
 	const dataFromSubtopicSelector = (val) => {
@@ -110,7 +92,7 @@ function TechVideos({ initialPageContent, introText }) {
 				{displayedSubtopics.length === 0 || subtopicValue.length > 0 || tags.length > 0 ? (
 					<div className="flex justify-center">
 						<YouTubeVideoSection
-							osvalue={videoValue}
+							videoValue={videoValue}
 							subtopicValue={subtopicValue}
 							tags={tags}
 							appliedFilterTags={appliedFilterTags}

@@ -1,15 +1,15 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../firebase/AuthContext';
-import YouTubeVideo from '../Layouts/Main/YouTubeVideo';
+import RemoveVideo from '../Layouts/Main/YouTubeVideo/RemoveYoutubeVideo';
 
-function AddYoutubeVideos() {
+function RemoveVideos() {
 	const { currentUser } = useAuth();
 	const navigate = useNavigate();
 
 	useEffect(() => {
 		if (currentUser && currentUser.uid === process.env.REACT_APP_ADMIN_UID) {
-			navigate('/addYoutubeVideos');
+			navigate('/removeVideos');
 		} else {
 			navigate('/');
 		}
@@ -17,9 +17,9 @@ function AddYoutubeVideos() {
 
 	return (
 		<div>
-			<YouTubeVideo />
+			<RemoveVideo />
 		</div>
 	);
 }
 
-export default AddYoutubeVideos;
+export default RemoveVideos;
