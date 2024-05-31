@@ -1,4 +1,4 @@
-import { fetchVideosFromFirebase, deleteAndArchiveVideo } from '../../../../firebase/firebaseReadWrite';
+import { fetchVideosFromFirebase, deleteAndArchiveVideo } from '../../../firebase/firebaseReadWrite';
 
 function RemoveYoutubeVideo() {
 	const videoValue = fetchVideosFromFirebase();

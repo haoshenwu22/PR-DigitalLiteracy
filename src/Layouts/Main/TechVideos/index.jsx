@@ -5,7 +5,7 @@ import Breadcrumb from '../../../components/Video/Breadcrumb';
 import FilterPanel from '../../../components/FilterPanel';
 import SearchBar from '../../../components/Video/Searchbar';
 import SubtopicSelection from '../../../components/Video/SubtopicSelection';
-import YouTubeVideoSection from '../../../components/Video/YouTubeVideoSection';
+import YouTubeVideoSection from '../../../components/Video/VideoSection';
 import { fetchVideosFromFirebase, fetchTopicsAndSubtopics } from '../../../firebase/firebaseReadWrite';
 import Intro from '../../../components/Video/Intro';
 import { FILTERGROUPS } from './constants';

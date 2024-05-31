@@ -6,7 +6,7 @@ import Popup from '../Popup/Popup';
 
 import { Colors } from '../../../constants/Colors';
 import './youtubeVideoSection.css';
-import '../../../Layouts/Main/YouTubeVideo/youtubeVideo.css';
+import '../../../Layouts/Main/AddVideo/youtubeVideo.css';
 
 export default function YouTubeVideoSection({ videoValue, subtopicValue, tags, appliedFilterTags }) {
 	// this is just a parameter to hide videos without a subtopic during testing

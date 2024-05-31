@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../firebase/AuthContext';
-import RemoveVideo from '../Layouts/Main/YouTubeVideo/RemoveYoutubeVideo';
+import RemoveVideo from '../Layouts/Main/RemoveVideo';
 
 function RemoveVideos() {
 	const { currentUser } = useAuth();
