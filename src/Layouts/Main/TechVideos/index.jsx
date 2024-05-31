@@ -5,7 +5,7 @@ import Breadcrumb from '../../../components/Video/Breadcrumb';
 import FilterPanel from '../../../components/FilterPanel';
 import SearchBar from '../../../components/Video/Searchbar';
 import SubtopicSelection from '../../../components/Video/SubtopicSelection';
-import YouTubeVideoSection from '../../../components/Video/VideoSection';
+import VideoSection from '../../../components/Video/VideoSection';
 import { fetchVideosFromFirebase, fetchTopicsAndSubtopics } from '../../../firebase/firebaseReadWrite';
 import Intro from '../../../components/Video/Intro';
 import { FILTERGROUPS } from './constants';
@@ -91,7 +91,7 @@ function TechVideos({ initialPageContent, introText }) {
 				{/* if there is are no subtopics, a subtopic is selected, or someone searched a tag in the search bar display videos */}
 				{displayedSubtopics.length === 0 || subtopicValue.length > 0 || tags.length > 0 ? (
 					<div className="flex justify-center">
-						<YouTubeVideoSection
+						<VideoSection
 							videoValue={videoValue}
 							subtopicValue={subtopicValue}
 							tags={tags}

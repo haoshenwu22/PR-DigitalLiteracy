@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../firebase/AuthContext';
-import AddVideo from '../Layouts/Main/AddVideo';
+import AddVideo from '../Layouts/Main/AddVideo/AddVideo';
 
 function AddVideos() {
 	const { currentUser } = useAuth();

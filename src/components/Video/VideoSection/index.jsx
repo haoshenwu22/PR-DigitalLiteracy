@@ -5,10 +5,10 @@ import { Box } from '@mui/material';
 import Popup from '../Popup/Popup';
 
 import { Colors } from '../../../constants/Colors';
-import './youtubeVideoSection.css';
+import './VideoSection.css';
 import '../../../Layouts/Main/AddVideo/youtubeVideo.css';
 
-export default function YouTubeVideoSection({ videoValue, subtopicValue, tags, appliedFilterTags }) {
+export default function VideoSection({ videoValue, subtopicValue, tags, appliedFilterTags }) {
 	// this is just a parameter to hide videos without a subtopic during testing
 	const showSubtopicUndefinedVideos = true;
 
@@ -141,7 +141,7 @@ export default function YouTubeVideoSection({ videoValue, subtopicValue, tags, a
 	);
 }
 
-YouTubeVideoSection.propTypes = {
+VideoSection.propTypes = {
 	videoValue: PropTypes.arrayOf(PropTypes.Obj).isRequired,
 	subtopicValue: PropTypes.string.isRequired,
 	tags: PropTypes.arrayOf(PropTypes.string).isRequired,

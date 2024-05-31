@@ -6,9 +6,9 @@ import Popup from './Components/Popups';
 import MessageInputSection from './Layouts/MessageInputSection';
 import SubmitButton from './Components/SubmitButton';
 import VideoSection from './Layouts/VideoSection';
-import YoutubeVideoInputSection from './Layouts/VideoInputSection';
+import VideoInputSection from './Layouts/VideoInputSection';
 
-function YouTubeVideo() {
+function AddVideo() {
 	// Database Values
 	const [url, setUrl] = useState('');
 	const [tags, setTags] = useState([]);
@@ -430,7 +430,7 @@ function YouTubeVideo() {
 				<VideoSection playerRef={playerRef} url={url} />
 			</section>
 			<section className="col-span-3 mb-8 flex flex-col gap-4 px-4">
-				<YoutubeVideoInputSection
+				<VideoInputSection
 					url={url}
 					setUrl={setUrl}
 					handleTagsKeyPress={handleTagsKeyPress}
@@ -466,4 +466,4 @@ function YouTubeVideo() {
 	);
 }
 
-export default YouTubeVideo;
+export default AddVideo;
