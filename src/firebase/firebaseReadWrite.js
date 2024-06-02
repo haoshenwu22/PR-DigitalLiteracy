@@ -102,7 +102,7 @@ export const getSubtopics = async (category) => {
 	}
 };
 
-export const fetchTopicsAndSubtopics = () => { 
+export const  fetchTopicsAndSubtopics = () => { 
 	const [subtopicGroups, setSubtopicGroups] = useState(null);
   
 	useEffect(() => {
