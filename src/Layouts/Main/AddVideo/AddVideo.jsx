@@ -14,7 +14,7 @@ function AddVideo() {
 	const [tags, setTags] = useState([]);
 	const [operatingSystem, setOs] = useState('');
 	const [category, setCategory] = useState('');
-	const [subtopic, setSubtopic] = useState(undefined);
+	const [subtopic, setSubtopic] = useState('');
 	const [messages, setMessage] = useState([
 		{
 			messages: '',
@@ -285,10 +285,7 @@ function AddVideo() {
 			});
 			return false;
 		}
-		console.log('subtopic: ', subtopic);
-
-		// check subtopic. If the database has no subtopics it allows the video to be added. This should be removed if we want to enforce subtopics either by adding them to the database in a seperate table or allowing their creation.
-		if (subtopic === '' && subtopic !== undefined) {
+		if (subtopic === '') {
 			setPopup({
 				text: 'Please select a subtopic.',
 				title: 'Oops...',

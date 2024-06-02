@@ -28,7 +28,6 @@ function Help() {
 		const data = [];
 		querySnapshot.forEach((doc) => {
 			// doc.data() is never undefined for query doc snapshots
-			console.log(doc.id, ' => ', doc.data());
 			if (doc.id !== process.env.REACT_APP_ADMIN_UID) {
 				const personData = doc.data();
 				// let firstName = '';
@@ -43,9 +42,6 @@ function Help() {
 				let professionalExperienceFormHelp = false;
 				let resolved = false;
 				let referencesHelp = false;
-				console.log('got here');
-
-				console.log(personData);
 
 				/*
 				if (personData.personal_info !== null && personData.personal_info !== undefined) {

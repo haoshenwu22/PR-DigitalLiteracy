@@ -26,14 +26,7 @@ export default function VideoInputSection({
 			const relevantSubtopics = subtopics.find((item) => item[0].toLowerCase() === category.toLowerCase())?.[1] || [];
 			setDisplayedSubtopics(relevantSubtopics);
 
-			// Let's videos be added to an empty database or if subtopics don't exist. We should remove this if we want to enforce subtopics. Ideally, we can create a seperate table for pre-made subtopics or force the users to create subtopics.
-			if (subtopics && subtopics.length > 0) {
-				setSubtopic('');
-				console.log('Subtopics found for this category');
-			} else {
-				setSubtopic(undefined);
-				console.log('No subtopics found for this category');
-			}
+			setSubtopic('');
 		}
 	}, [category]);
 
