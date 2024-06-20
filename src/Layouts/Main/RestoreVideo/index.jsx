@@ -1,19 +1,22 @@
 import React, { useState } from 'react';
-import { fetchVideosFromFirebase, fetchTopicsAndSubtopics } from '../../../firebase/firebaseReadWrite';
-import { deleteAndArchiveVideo } from '../../../firebase/firebaseVideoArchive';
-import SubtopicExpandedBox from './Components/SubtopicExpandedBox';
+import {
+	fetchArchivedVideosFromFirebase,
+	restoreVideo,
+	fetchArchivedTopicsAndSubtopics,
+} from '../../../firebase/firebaseVideoArchive';
+import SubtopicExpandedBox from '../RemoveVideo/Components/SubtopicExpandedBox';
 
-function RemoveVideo() {
-	const videoValue = fetchVideosFromFirebase();
-	const topicsAndSubtopics = fetchTopicsAndSubtopics();
+function RestoreVideo() {
+	const videoValue = fetchArchivedVideosFromFirebase();
+	const topicsAndSubtopics = fetchArchivedTopicsAndSubtopics();
 	const [expandedTopics, setExpandedTopics] = useState([]);
 
-	const handleDeleteVideo = async (videoKey) => {
-		const success = await deleteAndArchiveVideo(videoKey);
+	const handleRestoreVideo = async (videoKey) => {
+		const success = await restoreVideo(videoKey);
 		if (success) {
-			console.log('Video deleted successfully');
+			console.log('Video restored successfully');
 		} else {
-			console.log('Video deleted failed');
+			console.log('Video restored failed');
 		}
 	};
 
@@ -35,7 +38,7 @@ function RemoveVideo() {
 	if (videoValue && topicsAndSubtopics) {
 		return (
 			<div className="flex flex-col items-center min-h-screen">
-				<h1 className="text-3xl font-bold my-12">Remove Videos</h1>
+				<h1 className="text-3xl font-bold my-12">Restore Videos</h1>
 
 				<SubtopicExpandedBox
 					topicsAndSubtopics={topicsAndSubtopics}
@@ -62,10 +65,10 @@ function RemoveVideo() {
 									<td className="px-4 py-2">
 										<button
 											type="button"
-											className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded text-sm"
-											onClick={() => handleDeleteVideo(video.key)}
+											className="bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-2 rounded text-sm"
+											onClick={() => handleRestoreVideo(video.key)}
 										>
-											Delete & Archive
+											Restore Video
 										</button>
 									</td>
 								</tr>
@@ -78,4 +81,4 @@ function RemoveVideo() {
 	}
 }
 
-export default RemoveVideo;
+export default RestoreVideo;

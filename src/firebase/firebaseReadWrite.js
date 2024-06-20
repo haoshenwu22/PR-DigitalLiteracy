@@ -1,11 +1,9 @@
-import { updateDoc, onSnapshot, setDoc, collection, addDoc, getDocs, where, query, deleteDoc, doc, getDoc, serverTimestamp } from 'firebase/firestore';
+import { updateDoc, onSnapshot, setDoc, collection, addDoc, getDocs, where, query } from 'firebase/firestore';
 import { useState, useEffect } from 'react';
 
 import { db } from './firebase';
 
 const videoCollectionName = 'youtube-videos';
-const videoArchiveCollectionName = 'youtube-deleted-history';
-
 
 export const addData = async (docRef, docData) => {
 	console.log('docRef:', docRef);
@@ -125,30 +123,4 @@ export const  fetchTopicsAndSubtopics = () => {
 	}, []);
   
 	return subtopicGroups;
-};
-
-
-export const deleteAndArchiveVideo = async (videoId) => {
-	try {
-		const videoDocRef = doc(db, videoCollectionName, videoId);
-		const videoSnapshot = await getDoc(videoDocRef); // Get the video document
-  
-	if (!videoSnapshot.exists()) {
-		throw new Error('Video not found');
-	}
-  
-	const videoData = videoSnapshot.data();
-	videoData.archivedAt = serverTimestamp(); 
-  
-	// Delete the video from the original collection
-	await deleteDoc(videoDocRef);
-  
-	// Save the video data to the archive collection
-	await setDoc(doc(db, videoArchiveCollectionName, videoId), videoData);
-  
-	return true; // Indicate successful deletion and archiving
-	} catch (error) {
-		console.error('Error deleting and archiving video:', error);
-		return false; // Indicate failure
-	}
 };
