@@ -3,16 +3,16 @@ import PropTypes from 'prop-types';
 import ReactPlayer from 'react-player/youtube';
 import { Box } from '@mui/material';
 import Popup from '../Popup/Popup';
-
 import { Colors } from '../../../constants/Colors';
 import './VideoSection.css';
 import '../../../Layouts/Main/AddVideo/youtubeVideo.css';
 
-export default function VideoSection({ videoValue, subtopicValue, tags, appliedFilterTags }) {
+export default function VideoSection({ videoValue, transcriptValue, subtopicValue, tags, appliedFilterTags }) {
 	// this is just a parameter to hide videos without a subtopic during testing
 	const showSubtopicUndefinedVideos = true;
 
 	const [videos, setVideos] = useState(videoValue || []);
+
 	const [playerRefs, setPlayerRefs] = useState([]);
 	const [popup, setPopup] = useState(null);
 
@@ -70,28 +70,41 @@ export default function VideoSection({ videoValue, subtopicValue, tags, appliedF
 		}
 	};
 
+	console.log('trans:', transcriptValue);
+	console.log('videos:', videos);
+
 	if (videos && videos.length > 0) {
 		return (
-			<div className="h-full w-full grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 max-w-screen-xl">
+			<div className="h-full w-full grid grid-cols-1 gap-4 md:gap-6 max-w-screen-xl">
 				{videos.map((video, index) => (
-					<div key={video.key} className="h-72 w-full">
-						<ReactPlayer
-							key={video.key}
-							ref={playerRefs[index]}
-							className="react-player"
-							url={video.url}
-							width="100%"
-							height="100%"
-							onProgress={(progress) => handleProgress(progress, video, playerRefs[index])}
-							config={{
-								youtube: {
-									playerVars: {
-										controls: 1,
-										showinfo: 1,
+					<div key={video.key} className="flex flex-col md:flex-row md:gap-2 mb-4">
+						<div className="h-72 md:h-full md:w-6/12 mb-4 md:mb-0">
+							<ReactPlayer
+								key={video.key}
+								ref={playerRefs[index]}
+								className="react-player"
+								url={video.url}
+								width="100%"
+								height="100%"
+								onProgress={(progress) => handleProgress(progress, video, playerRefs[index])}
+								config={{
+									youtube: {
+										playerVars: {
+											controls: 1,
+											showinfo: 1,
+										},
 									},
-								},
-							}}
-						/>
+								}}
+							/>
+						</div>
+						<div className="flex-1">
+							<h1 className="text-2xl mb-2">
+								{transcriptValue.find((t) => t.key === video.key)?.title ?? 'Title not found...'}
+							</h1>
+							<div className="h-72 overflow-y-auto p-4 bg-backgroundColor border border-gray-200">
+								{transcriptValue.find((t) => t.key === video.key)?.transcript ?? 'Transcript not found...'}
+							</div>
+						</div>
 					</div>
 				))}
 				,
@@ -143,6 +156,7 @@ export default function VideoSection({ videoValue, subtopicValue, tags, appliedF
 
 VideoSection.propTypes = {
 	videoValue: PropTypes.arrayOf(PropTypes.Obj).isRequired,
+	transcripts: PropTypes.arrayOf(PropTypes.Obj).isRequired,
 	subtopicValue: PropTypes.string.isRequired,
 	tags: PropTypes.arrayOf(PropTypes.string).isRequired,
 	appliedFilterTags: PropTypes.arrayOf(PropTypes.string).isRequired,
