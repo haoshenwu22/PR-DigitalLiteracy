@@ -10,7 +10,9 @@ import TechUsedInClassAndWork from './pages/TechUsedInClassAndWork';
 import TechSafetyAndPrivacy from './pages/TechSafetyAndPrivacy';
 import FinanceAndManagement from './pages/FinancaAndManagement';
 import ForgotPassword from './pages/ForgotPassword';
-import AddYoutubeVideos from './pages/AddYoutubeVideos';
+import AddVideos from './pages/AddVideos';
+import RestoreVideos from './pages/RestoreVideos';
+import EditVideos from './pages/EditVideos';
 import HelpManager from './pages/HelpManager';
 import Quiz from './pages/Quiz';
 import Help from './pages/QuestionsPage';
@@ -32,7 +34,9 @@ const components = {
 	resumeBuilder: ResumeBuilder,
 	userInformation: UserInformation,
 	generateResume: PDFPage,
-	addYoutubeVideos: AddYoutubeVideos,
+	addVideos: AddVideos,
+	restoreVideos: RestoreVideos,
+	editVideos: EditVideos,
 	helpManager: HelpManager,
 };
 

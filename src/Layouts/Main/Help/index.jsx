@@ -28,12 +28,11 @@ function Help() {
 		const data = [];
 		querySnapshot.forEach((doc) => {
 			// doc.data() is never undefined for query doc snapshots
-			// console.log(doc.id, " => ", doc.data());
-
 			if (doc.id !== process.env.REACT_APP_ADMIN_UID) {
 				const personData = doc.data();
-				let firstName = '';
-				let lastName = '';
+				// let firstName = '';
+				// let lastName = '';
+				let name = '';
 				let email = '';
 				let lastHelpDate = new Date();
 				let keySkillsHelp = false;
@@ -44,6 +43,7 @@ function Help() {
 				let resolved = false;
 				let referencesHelp = false;
 
+				/*
 				if (personData.personal_info !== null && personData.personal_info !== undefined) {
 					if (personData.personal_info.firstName !== null && personData.personal_info.firstName !== undefined) {
 						firstName = personData.personal_info.firstName;
@@ -61,9 +61,19 @@ function Help() {
 						email = personData.personal_info.email;
 					}
 				}
+				*/
+
+				if (personData.name !== null && personData.name !== undefined) {
+					name = personData.name;
+				}
+
+				if (personData.email !== null && personData.email !== undefined) {
+					email = personData.email;
+				}
 
 				if (personData.lastHelpRequestDate !== null && personData.lastHelpRequestDate !== undefined) {
 					lastHelpDate = personData.lastHelpRequestDate.toDate().toDateString();
+					console.log(lastHelpDate);
 				}
 
 				if (
@@ -100,8 +110,9 @@ function Help() {
 				data.push({
 					id: data.length,
 					userId: doc.id,
-					firstName,
-					lastName,
+					// firstName,
+					// lastName,
+					name,
 					email,
 					lastHelpDate,
 					keySkillsHelp,
@@ -112,7 +123,6 @@ function Help() {
 					resolved,
 					referencesHelp,
 				});
-				// console.log("data is ", data);
 			}
 		});
 
@@ -120,6 +130,7 @@ function Help() {
 	};
 
 	const columns = [
+		/*
 		{
 			headerName: 'First Name',
 			field: 'firstName',
@@ -127,6 +138,8 @@ function Help() {
 			resizable: true,
 		},
 		{ headerName: 'Last Name', field: 'lastName', minWidth: 150 },
+		*/
+		{ headerName: 'Name', field: 'name', minWidth: 200 },
 		{ headerName: 'Email', field: 'email', minWidth: 200 },
 		{
 			headerName: 'Last Help Date',

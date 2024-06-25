@@ -1,15 +1,15 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../firebase/AuthContext';
-import Help from '../Layouts/Main/Help';
+import AddVideo from '../Layouts/Main/AddVideo/AddVideo';
 
-function HelpManager() {
+function AddVideos() {
 	const { currentUser } = useAuth();
 	const navigate = useNavigate();
 
 	useEffect(() => {
 		if (currentUser && currentUser.uid === process.env.REACT_APP_ADMIN_UID) {
-			navigate('/helpManager');
+			navigate('/addVideos');
 		} else {
 			navigate('/');
 		}
@@ -17,9 +17,9 @@ function HelpManager() {
 
 	return (
 		<div>
-			<Help />
+			<AddVideo />
 		</div>
 	);
 }
 
-export default HelpManager;
+export default AddVideos;

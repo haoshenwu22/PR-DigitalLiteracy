@@ -6,14 +6,15 @@ import Popup from './Components/Popups';
 import MessageInputSection from './Layouts/MessageInputSection';
 import SubmitButton from './Components/SubmitButton';
 import VideoSection from './Layouts/VideoSection';
-import YoutubeVideoInputSection from './Layouts/VideoInputSection';
+import VideoInputSection from './Layouts/VideoInputSection';
 
-function YouTubeVideo() {
+function AddVideo() {
 	// Database Values
 	const [url, setUrl] = useState('');
 	const [tags, setTags] = useState([]);
 	const [operatingSystem, setOs] = useState('');
 	const [category, setCategory] = useState('');
+	const [subtopic, setSubtopic] = useState('');
 	const [messages, setMessage] = useState([
 		{
 			messages: '',
@@ -127,6 +128,7 @@ function YouTubeVideo() {
 					tags,
 					operating_system: operatingSystem,
 					category,
+					subtopic,
 					stopTimes: chapterStopTimes,
 					messages: chapterMessages,
 				});
@@ -135,6 +137,7 @@ function YouTubeVideo() {
 				setTags([]);
 				setOs('');
 				setCategory('');
+				setSubtopic('');
 				setStopTimes([{ stopTimes: '' }]);
 				setMessage([{ message: '' }]);
 				// set checked to false
@@ -170,6 +173,7 @@ function YouTubeVideo() {
 					tags,
 					operating_system: operatingSystem,
 					category,
+					subtopic,
 					stopTimes,
 					messages,
 				});
@@ -178,6 +182,7 @@ function YouTubeVideo() {
 				setTags([]);
 				setOs('');
 				setCategory('');
+				setSubtopic('');
 				setStopTimes([{ stopTimes: '' }]);
 				setMessage([{ message: '' }]);
 
@@ -274,6 +279,15 @@ function YouTubeVideo() {
 		if (category === '') {
 			setPopup({
 				text: 'Please select a video category.',
+				title: 'Oops...',
+				visible: true,
+				icon: 'error',
+			});
+			return false;
+		}
+		if (subtopic === '') {
+			setPopup({
+				text: 'Please select a subtopic.',
 				title: 'Oops...',
 				visible: true,
 				icon: 'error',
@@ -413,7 +427,7 @@ function YouTubeVideo() {
 				<VideoSection playerRef={playerRef} url={url} />
 			</section>
 			<section className="col-span-3 mb-8 flex flex-col gap-4 px-4">
-				<YoutubeVideoInputSection
+				<VideoInputSection
 					url={url}
 					setUrl={setUrl}
 					handleTagsKeyPress={handleTagsKeyPress}
@@ -423,6 +437,8 @@ function YouTubeVideo() {
 					setOs={setOs}
 					category={category}
 					setCategory={setCategory}
+					subtopic={subtopic}
+					setSubtopic={setSubtopic}
 				/>
 
 				<MessageInputSection
@@ -447,4 +463,4 @@ function YouTubeVideo() {
 	);
 }
 
-export default YouTubeVideo;
+export default AddVideo;

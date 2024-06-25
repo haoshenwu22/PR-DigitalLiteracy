@@ -1,25 +1,21 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../firebase/AuthContext';
-import YouTubeVideo from '../Layouts/Main/YouTubeVideo';
+// import EditVideo from '../Layouts/Main/RestoreVideo';
 
-function AddYoutubeVideos() {
+function EditVideos() {
 	const { currentUser } = useAuth();
 	const navigate = useNavigate();
 
 	useEffect(() => {
 		if (currentUser && currentUser.uid === process.env.REACT_APP_ADMIN_UID) {
-			navigate('/addYoutubeVideos');
+			navigate('/editVideos');
 		} else {
 			navigate('/');
 		}
 	}, [currentUser, navigate]);
 
-	return (
-		<div>
-			<YouTubeVideo />
-		</div>
-	);
+	return <div>{/* <EditVideo /> */}</div>;
 }
 
-export default AddYoutubeVideos;
+export default EditVideos;

@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { MenuItem, Divider } from '@mui/material';
 import PropTypes from 'prop-types';
+import { set } from 'lodash';
 import InputField, { TagsInputField, DropdownInputField } from '../Components/InputFields';
+import { fetchTopicsAndSubtopics } from '../../../../firebase/firebaseReadWrite';
 
 export default function VideoInputSection({
 	url,
@@ -13,12 +15,20 @@ export default function VideoInputSection({
 	setOs,
 	category,
 	setCategory,
+	subtopic,
+	setSubtopic,
 }) {
-	const [inputValue, setInputValue] = useState(url); // Local state for value
+	const subtopics = fetchTopicsAndSubtopics();
+	const [displaySubtopics, setDisplayedSubtopics] = useState([]);
 
 	useEffect(() => {
-		setInputValue(url); // Sync with parent's value
-	}, [url]); // Trigger update when the parent's value changes
+		if (category) {
+			const relevantSubtopics = subtopics.find((item) => item[0].toLowerCase() === category.toLowerCase())?.[1] || [];
+			setDisplayedSubtopics(relevantSubtopics);
+
+			setSubtopic('');
+		}
+	}, [category]);
 
 	return (
 		<div className="bg-backgroundColor shadow-md rounded-xl py-12 px-12">
@@ -26,7 +36,7 @@ export default function VideoInputSection({
 				<InputField
 					headerText="Youtube Link:"
 					placeHolder="Input Youtube Video Url"
-					value={inputValue}
+					value={url}
 					onChangeFunction={setUrl}
 					eventName="youtubeLink"
 				/>
@@ -95,6 +105,22 @@ export default function VideoInputSection({
 						</MenuItem>,
 					]}
 				/>
+
+				{category && subtopics.length > 0 && (
+					<DropdownInputField
+						headerText="Subtopic:"
+						inputLabel="Select a subtopic"
+						value={subtopic}
+						onChangeFunction={setSubtopic}
+						MenuItems={[
+							displaySubtopics.map((subtopicVal, index) => (
+								<MenuItem key={index} value={subtopicVal}>
+									{subtopicVal}
+								</MenuItem>
+							)),
+						]}
+					/>
+				)}
 			</div>
 		</div>
 	);
@@ -110,4 +136,6 @@ VideoInputSection.propTypes = {
 	setOs: PropTypes.func.isRequired,
 	category: PropTypes.string.isRequired,
 	setCategory: PropTypes.func.isRequired,
+	subtopic: PropTypes.string.isRequired,
+	setSubtopic: PropTypes.func.isRequired,
 };
