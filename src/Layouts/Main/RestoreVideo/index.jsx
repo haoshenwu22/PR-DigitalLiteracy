@@ -4,7 +4,7 @@ import {
 	restoreVideo,
 	fetchArchivedTopicsAndSubtopics,
 } from '../../../firebase/firebaseVideoArchive';
-import SubtopicExpandedBox from '../RemoveVideo/Components/SubtopicExpandedBox';
+import SubtopicExpandedBox from './SubtopicExpandedBox';
 
 function RestoreVideo() {
 	const videoValue = fetchArchivedVideosFromFirebase();

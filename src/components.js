@@ -11,7 +11,6 @@ import TechSafetyAndPrivacy from './pages/TechSafetyAndPrivacy';
 import FinanceAndManagement from './pages/FinancaAndManagement';
 import ForgotPassword from './pages/ForgotPassword';
 import AddVideos from './pages/AddVideos';
-import RemoveVideos from './pages/RemoveVideos';
 import RestoreVideos from './pages/RestoreVideos';
 import EditVideos from './pages/EditVideos';
 import HelpManager from './pages/HelpManager';
@@ -36,7 +35,6 @@ const components = {
 	userInformation: UserInformation,
 	generateResume: PDFPage,
 	addVideos: AddVideos,
-	removeVideos: RemoveVideos,
 	restoreVideos: RestoreVideos,
 	editVideos: EditVideos,
 	helpManager: HelpManager,

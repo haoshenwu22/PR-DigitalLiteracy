@@ -41,7 +41,6 @@ const ProfileMenu = ({ isMobile }) => {
 					},
 					{ name: 'Add Videos', href: PATHS.addVideos },
 					{ name: 'Edit Videos', href: PATHS.editVideos },
-					{ name: 'Remove Videos', href: PATHS.removeVideos },
 					{ name: 'Restore Videos', href: PATHS.restoreVideos },
 					{
 						name: 'Help Manager',
