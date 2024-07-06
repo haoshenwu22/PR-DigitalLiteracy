@@ -16,7 +16,7 @@ const PATHS = {
 	generateResume: '/generateResume',
 	addVideos: '/addVideos',
 	restoreVideos: '/restoreVideos',
-	editVideos: '/editVideos',
+	updateVideo: '/updateVideo/:videoId',
 	helpManager: '/helpManager',
 };
 

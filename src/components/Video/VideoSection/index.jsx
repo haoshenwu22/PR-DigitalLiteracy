@@ -6,8 +6,11 @@ import Popup from '../Popup/Popup';
 import { Colors } from '../../../constants/Colors';
 import './VideoSection.css';
 import '../../../Layouts/Main/AddVideo/youtubeVideo.css';
+import AdminVideoControls from './AdminVideoControls';
+import { useAuth } from '../../../firebase/AuthContext';
 
 export default function VideoSection({ videoValue, transcriptValue, subtopicValue, tags, appliedFilterTags }) {
+	const { currentUser } = useAuth();
 	// this is just a parameter to hide videos without a subtopic during testing
 	const showSubtopicUndefinedVideos = true;
 
@@ -70,41 +73,43 @@ export default function VideoSection({ videoValue, transcriptValue, subtopicValu
 		}
 	};
 
-	console.log('trans:', transcriptValue);
-	console.log('videos:', videos);
-
 	if (videos && videos.length > 0) {
 		return (
 			<div className="h-full w-full grid grid-cols-1 gap-4 md:gap-6 max-w-screen-xl">
 				{videos.map((video, index) => (
-					<div key={video.key} className="flex flex-col md:flex-row md:gap-2 mb-4">
-						<div className="h-72 md:h-full md:w-6/12 mb-4 md:mb-0">
-							<ReactPlayer
-								key={video.key}
-								ref={playerRefs[index]}
-								className="react-player"
-								url={video.url}
-								width="100%"
-								height="100%"
-								onProgress={(progress) => handleProgress(progress, video, playerRefs[index])}
-								config={{
-									youtube: {
-										playerVars: {
-											controls: 1,
-											showinfo: 1,
+					<div key={video.key} className="flex flex-col">
+						<div className="flex flex-col md:flex-row md:gap-2 mb-4">
+							<div className="h-72 md:h-full md:w-6/12 mb-4 md:mb-0">
+								<ReactPlayer
+									key={video.key}
+									ref={playerRefs[index]}
+									className="react-player"
+									url={video.url}
+									width="100%"
+									height="100%"
+									onProgress={(progress) => handleProgress(progress, video, playerRefs[index])}
+									config={{
+										youtube: {
+											playerVars: {
+												controls: 1,
+												showinfo: 1,
+											},
 										},
-									},
-								}}
-							/>
-						</div>
-						<div className="flex-1">
-							<h1 className="text-2xl mb-2">
-								{transcriptValue.find((t) => t.key === video.key)?.title ?? 'Title not found...'}
-							</h1>
-							<div className="h-72 overflow-y-auto p-4 bg-backgroundColor border border-gray-200">
-								{transcriptValue.find((t) => t.key === video.key)?.transcript ?? 'Transcript not found...'}
+									}}
+								/>
+							</div>
+							<div className="flex-1">
+								<h1 className="text-2xl mb-2">
+									{transcriptValue.find((t) => t.key === video.key)?.title ?? 'Title not found...'}
+								</h1>
+								<div className="h-72 overflow-y-auto p-4 bg-backgroundColor border border-gray-200">
+									{transcriptValue.find((t) => t.key === video.key)?.transcript ?? 'Transcript not found...'}
+								</div>
 							</div>
 						</div>
+						{currentUser && currentUser.uid === process.env.REACT_APP_ADMIN_UID && (
+							<AdminVideoControls videoId={video.key} />
+						)}
 					</div>
 				))}
 				,
@@ -156,7 +161,7 @@ export default function VideoSection({ videoValue, transcriptValue, subtopicValu
 
 VideoSection.propTypes = {
 	videoValue: PropTypes.arrayOf(PropTypes.Obj).isRequired,
-	transcripts: PropTypes.arrayOf(PropTypes.Obj).isRequired,
+	transcriptValue: PropTypes.arrayOf(PropTypes.Obj).isRequired,
 	subtopicValue: PropTypes.string.isRequired,
 	tags: PropTypes.arrayOf(PropTypes.string).isRequired,
 	appliedFilterTags: PropTypes.arrayOf(PropTypes.string).isRequired,
