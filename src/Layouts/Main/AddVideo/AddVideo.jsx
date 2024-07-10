@@ -54,9 +54,6 @@ function AddVideo({ videoData }) {
 	const [title, setTitle] = useState([]);
 	const [channelTitle, setChannelTitle] = useState([]);
 
-	console.log('REE', chapterMessages);
-	console.log('REE2 ', chapterStopTimes);
-
 	/*
 	const youtube = google.youtube('v3');
 
