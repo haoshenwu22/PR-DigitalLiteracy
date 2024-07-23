@@ -1,62 +1,88 @@
-// import { React, useEffect, useState } from 'react';
-// import PropTypes from 'prop-types';
-// import { Box, Button, Typography, Grid } from '@mui/material';
-// import { useNavigate } from 'react-router-dom';
-// import { doc, setDoc, collection } from 'firebase/firestore';
-// import { db } from '../../../../firebase/firebase';
-// import { useAuth } from '../../../../firebase/AuthContext';
-// import { updateData } from '../../../../firebase/firebaseReadWrite';
+import React, { useEffect, useState } from 'react';
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import FormControl from '@mui/material/FormControl';
+import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
+import Box from '@mui/material/Box';
+import { useNavigate } from 'react-router-dom';
+import sty from './index.module.css';
 
-// function Results({ data, scores }) {
-// 	const { currentUser } = useAuth();
-// 	let docRef;
-// 	if (currentUser !== null) {
-// 		docRef = doc(db, 'users', currentUser.uid);
-// 	}
-// 	const [result, setResult] = useState({
-// 		ios: scores[0],
-// 		android: scores[1],
-// 		windows: scores[2],
-// 	});
-// 	useEffect(() => {
-// 		const saveData = async () => {
-// 			await updateData(docRef, { result });
-// 		};
-// 		saveData();
-// 	}, [scores, currentUser]);
-// 	const navigate = useNavigate();
+export default function AnswerResult({ result, setResult }) {
+	console.log('result = ', result);
+	let wrongArr = [];
+	let videoArr = [];
+	if (result) {
+		wrongArr = result?.filter((v) => {
+			let bol = !v.isCorrect;
+			if (bol) {
+				videoArr = videoArr.concat(v.question.videos);
+			}
+			return bol;
+		});
+	}
+	return (
+		<div>
+			<Box>
+				<Typography
+					sx={{
+						color: 'deepskyblue',
+					}}
+					variant="h4"
+					gutterBottom
+				>
+					Well Done!
+				</Typography>
+				<Typography
+					sx={{
+						color: 'deepskyblue',
+					}}
+					variant="h5"
+					gutterBottom
+				>
+					Here is the suggestions based on your result.
+				</Typography>
+			</Box>
+			<Box>
+				<Typography variant="h6" gutterBottom>
+					Your score is
+				</Typography>
+				<Typography variant="h6" gutterBottom>
+					{result?.length - wrongArr.length}/{result?.length}
+				</Typography>
+			</Box>
+			{videoArr.map((v) => {
+				return (
+					<Box
+						sx={{
+							marginBottom: 2,
+						}}
+					>
+						<video
+							style={{
+								maxWidth: '100%',
+							}}
+							src={v}
+							controls
+						></video>
+					</Box>
+				);
+			})}
 
-// 	const handleButtonClick = () => {
-// 		navigate('/');
-// 	};
-
-// 	return (
-// 		<Box height="calc(100vh - 100px)" display="flex" flexDirection="column" justifyContent="center" alignItems="center">
-// 			<Box mb={4}>
-// 				<Typography variant="h3">Results</Typography>
-// 			</Box>
-// 			{data.map((category, index) => (
-// 				<Grid container justifyContent="center" key={index}>
-// 					<Box display="flex" alignItems="center" minWidth={200} marginRight={3}>
-// 						<Typography variant="h5">{category.category}</Typography>
-// 					</Box>
-// 					<Typography variant="h6">
-// 						{scores[index]} / {category.questions.length}
-// 					</Typography>
-// 				</Grid>
-// 			))}
-// 			<Box mt={3} display="flex" justifyContent="center">
-// 				<Button variant="contained" onClick={handleButtonClick}>
-// 					Start Learning!
-// 				</Button>
-// 			</Box>
-// 		</Box>
-// 	);
-// }
-
-// Results.propTypes = {
-// 	data: PropTypes.array.isRequired,
-// 	scores: PropTypes.array.isRequired,
-// };
-
-// export default Results;
+			<Box sx={{}}>
+				<Button
+					sx={{
+						width: '100%',
+					}}
+					onClick={() => {
+						setResult(null);
+					}}
+					variant="contained"
+				>
+					Do it again?
+				</Button>
+			</Box>
+		</div>
+	);
+}
