@@ -12,13 +12,10 @@ import sty from './index.module.css';
 export default function AnswerResult({ result, setResult }) {
 	console.log('result = ', result);
 	let wrongArr = [];
-	let videoArr = [];
 	if (result) {
-		wrongArr = result?.filter((v) => {
+		wrongArr = result?.filter((v, i) => {
 			let bol = !v.isCorrect;
-			if (bol) {
-				videoArr = videoArr.concat(v.question.videos);
-			}
+			v.index = i;
 			return bol;
 		});
 	}
@@ -52,24 +49,61 @@ export default function AnswerResult({ result, setResult }) {
 					{result?.length - wrongArr.length}/{result?.length}
 				</Typography>
 			</Box>
-			{videoArr.map((v) => {
+			{wrongArr?.map((v) => {
 				return (
 					<Box
 						sx={{
 							marginBottom: 2,
+							borderBottom: '1px solid #ddd',
+							paddingBottom: 2,
 						}}
 					>
-						<video
-							style={{
-								maxWidth: '100%',
-							}}
-							src={v}
-							controls
-						></video>
+						<Typography variant="h6" gutterBottom>
+							{v.index + 1}. {v.question.text}
+						</Typography>
+
+						{v.question.answerText && (
+							<Typography variant="subtitle2" gutterBottom>
+								{v.question.answerText}
+							</Typography>
+						)}
+
+						{v?.question?.images?.map((url) => {
+							return (
+								<Box
+									sx={{
+										marginBottom: 1,
+									}}
+								>
+									<img
+										style={{
+											maxWidth: '100%',
+										}}
+										src={url}
+									/>
+								</Box>
+							);
+						})}
+						{v?.question?.videos?.map((url) => {
+							return (
+								<Box
+									sx={{
+										marginBottom: 1,
+									}}
+								>
+									<video
+										style={{
+											maxWidth: '100%',
+										}}
+										src={url}
+										controls
+									></video>
+								</Box>
+							);
+						})}
 					</Box>
 				);
 			})}
-
 			<Box sx={{}}>
 				<Button
 					sx={{

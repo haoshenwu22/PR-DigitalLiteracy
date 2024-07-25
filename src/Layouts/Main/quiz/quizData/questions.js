@@ -15,6 +15,8 @@ const questions = {
 			id: 1,
 			text: '1 Can you identify the App Store on your desktop?',
 			videos: [test, test],
+			images: [ios, android],
+			answerText: 'this is answer',
 			options: [{
 				label: 'Option A',
 				image: [x2, android],

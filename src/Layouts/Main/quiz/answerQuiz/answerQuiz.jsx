@@ -27,8 +27,10 @@ export default function AnswerQuiz({ questions, setResult }) {
 		setChecked(event.target.value);
 	};
 
-	const getRandomQuestion = (difficulty) => {
-		const availableQuestions = questions[difficulty].filter((q) => !answeredQuestions[difficulty].includes(q.id));
+	const getRandomQuestion = (difficulty, answeredQues) => {
+		let needAnsweredQues = answeredQues || answeredQuestions;
+		console.log('needAnsweredQues = ', needAnsweredQues);
+		const availableQuestions = questions[difficulty].filter((q) => !needAnsweredQues[difficulty].includes(q.id));
 		if (availableQuestions.length === 0) return null;
 		const randomIndex = Math.floor(Math.random() * availableQuestions.length);
 		return availableQuestions[randomIndex];
@@ -53,12 +55,13 @@ export default function AnswerQuiz({ questions, setResult }) {
 			question: currentQuestion,
 		});
 		setAnswerRecords(deepAnswerRecords);
-		setAnsweredQuestions((prev) => {
-			return {
-				...prev,
-				[difficulty]: [...prev[difficulty], currentQuestion.id],
-			};
-		});
+
+		let deepNewAnsweredQuestions = {
+			...answeredQuestions,
+			[difficulty]: [...answeredQuestions[difficulty], currentQuestion.id],
+		};
+		setAnsweredQuestions(deepNewAnsweredQuestions);
+
 		if (curIndex == 5) {
 			// console.log('deepAnswerRecords = ', deepAnswerRecords);
 			setResult(deepAnswerRecords);
@@ -83,12 +86,14 @@ export default function AnswerQuiz({ questions, setResult }) {
 			}
 		}
 		setDifficulty(nextDifficulty);
-		const nextQuestion = getRandomQuestion(nextDifficulty);
+		const nextQuestion = getRandomQuestion(nextDifficulty, deepNewAnsweredQuestions);
+		console.log('currentQuestion2 = ', currentQuestion);
+		console.log('nextQuestion = ', nextQuestion);
 		setCurrentQuestion(nextQuestion);
 		setCurIndex(curIndex + 1);
 		setChecked('');
 	};
-
+	console.log('currentQuestion1 = ', currentQuestion);
 	return (
 		<div>
 			{previewSrc && (
