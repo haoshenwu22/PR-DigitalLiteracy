@@ -336,25 +336,109 @@ const questions = {
 	mobile: {
 		easy: [{
 			id: 31,
-			text: 'Can you identify the App Store on your mobile?',
+			text: '1 Can you identify the App Store on your desktop?',
+			videos: [test, test],
 			options: [{
 				label: 'Option A',
-				image: 'path_to_mobile_image_1',
+				image: [x2, android],
 				isCorrect: false
 			},
 			{
 				label: 'Option B',
-				image: 'path_to_mobile_image_2',
+				image: [iosAlbum, android],
 				isCorrect: false
 			},
 			{
 				label: 'Option C',
-				image: 'path_to_mobile_image_3',
+				image: [iosSettings, android],
 				isCorrect: true
 			},
 			],
 		},
-			// Add more easy mobile questions...
+		{
+			id: 32,
+			text: '2 Can you identify the Album in your phone?',
+			videos: [test, test],
+			options: [{
+				label: 'Option A',
+				image: [ios, android],
+				isCorrect: false
+			},
+			{
+				label: 'Option B',
+				image: [iosSettings, android],
+				isCorrect: false
+			},
+			{
+				label: 'Option C',
+				image: [iosAlbum, android],
+				isCorrect: true
+			},
+			],
+		},
+		{
+			id: 33,
+			text: '3 Can you identify the App Store on your desktop?',
+			videos: [test, test],
+			options: [{
+				label: 'Option A',
+				image: [ios, android],
+				isCorrect: false
+			},
+			{
+				label: 'Option B',
+				image: [set, user],
+				isCorrect: false
+			},
+			{
+				label: 'Option C',
+				image: [amazonPhishing, user],
+				isCorrect: true
+			},
+			],
+		},
+		{
+			id: 34,
+			text: '4 Can you identify the App Store on your desktop?',
+			videos: [test, test],
+			options: [{
+				label: 'Option A',
+				image: [ios, android],
+				isCorrect: false
+			},
+			{
+				label: 'Option B',
+				image: [set, user],
+				isCorrect: false
+			},
+			{
+				label: 'Option C',
+				image: [ios, user],
+				isCorrect: true
+			},
+			],
+		},
+		{
+			id: 35,
+			text: '5 Can you identify the App Store on your desktop?',
+			videos: [test, test],
+			options: [{
+				label: 'Option A',
+				image: [ios, android],
+				isCorrect: false
+			},
+			{
+				label: 'Option B',
+				image: [set, user],
+				isCorrect: false
+			},
+			{
+				label: 'Option C',
+				image: [ios, user],
+				isCorrect: true
+			},
+			],
+		},
 		],
 		moderate: [{
 			id: 41,
