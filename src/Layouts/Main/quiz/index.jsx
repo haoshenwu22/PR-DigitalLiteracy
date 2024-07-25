@@ -27,7 +27,7 @@ export default function QuizLayout() {
 			<div className="max-w-lg mx-auto bg-white p-8 shadow-md rounded mt-8">
 				<form onSubmit={handleSubmit}>
 					<div className="mb-4">
-						<p className="block text-gray-700 font-bold mb-2">Choose which platform you use more often:</p>
+						<p className="block text-gray-700 font-bold mb-2 md:text-xl">Choose which platform you use more often:</p>
 						<div className="flex justify-around">
 							<label htmlFor="desktop" className="flex flex-col items-center">
 								<input
