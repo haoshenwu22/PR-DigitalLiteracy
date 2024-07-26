@@ -8,9 +8,11 @@ import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import { useNavigate } from 'react-router-dom';
 import sty from './index.module.css';
+import zoom from '../img/zoom.png';
 
 export default function AnswerResult({ result, setResult }) {
 	console.log('result = ', result);
+	const [previewSrc, setPreviewSrc] = useState(null);
 	let wrongArr = [];
 	if (result) {
 		wrongArr = result?.filter((v, i) => {
@@ -21,6 +23,17 @@ export default function AnswerResult({ result, setResult }) {
 	}
 	return (
 		<div>
+			{previewSrc && (
+				<div
+					onClick={() => {
+						document.body.style.overflow = 'auto';
+						setPreviewSrc(null);
+					}}
+					className={sty.modalBox}
+				>
+					<img src={previewSrc} />
+				</div>
+			)}
 			<Box>
 				<Typography
 					sx={{
@@ -63,27 +76,29 @@ export default function AnswerResult({ result, setResult }) {
 						</Typography>
 
 						{v.question.answerText && (
-							<Typography variant="subtitle2" gutterBottom>
+							<Typography variant="subtitle2" gutterBottom style={{ whiteSpace: 'pre-line' }}>
 								{v.question.answerText}
 							</Typography>
 						)}
 
-						{v?.question?.images?.map((url) => {
-							return (
-								<Box
-									sx={{
-										marginBottom: 1,
-									}}
-								>
-									<img
-										style={{
-											maxWidth: '100%',
+						<div className={sty.imgBox}>
+							{v?.question?.images?.map((imgItem) => {
+								return (
+									<div
+										onClick={() => {
+											document.body.style.overflow = 'hidden';
+											setPreviewSrc(imgItem);
 										}}
-										src={url}
-									/>
-								</Box>
-							);
-						})}
+										style={{
+											cursor: `url(${zoom}), auto`,
+										}}
+										className={sty.imgItem}
+									>
+										<img className={sty.img} src={imgItem} />
+									</div>
+								);
+							})}
+						</div>
 						{v?.question?.videos?.map((url) => {
 							return (
 								<Box
