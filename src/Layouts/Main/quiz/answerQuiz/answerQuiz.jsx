@@ -7,6 +7,7 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import { useNavigate } from 'react-router-dom';
+import zoom from '../img/zoom.png';
 import sty from './answerQuiz.module.css';
 
 export default function AnswerQuiz({ questions, setResult }) {
@@ -128,6 +129,10 @@ export default function AnswerQuiz({ questions, setResult }) {
 													onClick={() => {
 														document.body.style.overflow = 'hidden';
 														setPreviewSrc(imgItem);
+													}}
+													style={{
+														cursor: `url(${zoom}), auto`,
+														// cursor: 'pointer',
 													}}
 													className={sty.imgItem}
 												>
