@@ -4,10 +4,22 @@ import set from './img/set.png';
 import user from './img/user.png';
 import x2 from './img/x2.png';
 import amazonPhishing from './img/amazonPhishing.png';
-import iosAlbum from './img/iosAlbum.png'
-import iosSettings from './img/iosSettings.png'
+
 
 import test from './img/test.mp4';
+// Mobile imports 
+import swipingPhone from './img/Mobile/swipingPhone.jpg'
+import dialingNumber from './img/Mobile/dialingNumber.jpg'
+import turningOffPhone from './img/Mobile/turningOffPhone.png'
+import iosAppstore from './img/Mobile/iosAppstore.png'
+import adrAppstore from './img/Mobile/adrAppstore.png'
+import iosAlbum from './img/Mobile/iosAlbum.png'
+import adrAlbum from './img/Mobile/adrAlbum.png'
+import iosSettings from './img/Mobile/iosSettings.png'
+import adrSettings from './img/Mobile/adrSettings.png'
+import iosCamera from './img/Mobile/iosCamera.png'
+import adrCamera from './img/Mobile/adrCamera.png'
+import iMessage from './img/Mobile/iMessage.png'
 
 const questions = {
 	desktop: {
@@ -121,7 +133,7 @@ const questions = {
 		],
 		moderate: [
 			{
-				id: 11,
+				id: 21,
 				text: '11 Moderate desktop question example?',
 				videos: [test, test],
 				options: [{
@@ -142,7 +154,7 @@ const questions = {
 				],
 			},
 			{
-				id: 12,
+				id: 22,
 				text: '12 Moderate desktop question example?',
 				videos: [test, test],
 				options: [{
@@ -163,7 +175,7 @@ const questions = {
 				],
 			},
 			{
-				id: 13,
+				id: 23,
 				text: '13 Moderate desktop question example?',
 				videos: [test, test],
 				options: [{
@@ -184,7 +196,7 @@ const questions = {
 				],
 			},
 			{
-				id: 14,
+				id: 24,
 				text: '14 Moderate desktop question example?',
 				videos: [test, test],
 				options: [{
@@ -205,7 +217,7 @@ const questions = {
 				],
 			},
 			{
-				id: 15,
+				id: 25,
 				text: '15 Moderate desktop question example?',
 				videos: [test, test],
 				options: [{
@@ -228,7 +240,7 @@ const questions = {
 			// Add more moderate desktop questions...
 		],
 		hard: [{
-			id: 21,
+			id: 41,
 			text: '21 Hard desktop question example?',
 			videos: [test, test],
 			options: [{
@@ -249,7 +261,7 @@ const questions = {
 			],
 		},
 		{
-			id: 22,
+			id: 42,
 			text: '22 Hard desktop question example?',
 			videos: [test, test],
 			options: [{
@@ -270,7 +282,7 @@ const questions = {
 			],
 		},
 		{
-			id: 23,
+			id: 43,
 			text: '23 Hard desktop question example?',
 			videos: [test, test],
 			options: [{
@@ -291,7 +303,7 @@ const questions = {
 			],
 		},
 		{
-			id: 24,
+			id: 44,
 			text: '24 Hard desktop question example?',
 			videos: [test, test],
 			options: [{
@@ -312,7 +324,7 @@ const questions = {
 			],
 		},
 		{
-			id: 25,
+			id: 45,
 			text: '25 Hard desktop question example?',
 			videos: [test, test],
 			options: [{
@@ -336,154 +348,169 @@ const questions = {
 		],
 	},
 	mobile: {
-		easy: [{
-			id: 31,
-			text: '1 Can you identify the App Store on your desktop?',
-			videos: [test, test],
-			options: [{
-				label: 'Option A',
-				image: [x2, android],
-				isCorrect: false
+		easy: [
+			{
+				id: 61,
+				text: '61 Which of the following images shows how to unlock a smartphone? ',
+				answerText: 'You can swipe your phone to unlock your smartphone:',
+				images: [swipingPhone],
+				videos: [],
+				options: [{
+					label: 'Swiping Phone',
+					image: [swipingPhone],
+					isCorrect: true
+				},
+				{
+					label: 'Dialing Number',
+					image: [dialingNumber],
+					isCorrect: false
+				},
+				{
+					label: 'Turning off phone',
+					image: [turningOffPhone],
+					isCorrect: false
+				},
+				],
 			},
 			{
-				label: 'Option B',
-				image: [iosAlbum, android],
-				isCorrect: false
+				id: 62,
+				text: '62 Can you identify the app icon that you can use to install new application?',
+				answerText: 'This is the application shop on either an iphone or an andriod phone:',
+				images: [iosAppstore, adrAppstore],
+				videos: [],
+				options: [{
+					label: 'Option A',
+					image: [iosCamera, adrCamera],
+					isCorrect: false
+				},
+				{
+					label: 'Option B',
+					image: [iosSettings, adrSettings],
+					isCorrect: false
+				},
+				{
+					label: 'Option C',
+					image: [iosAppstore, adrAppstore],
+					isCorrect: true
+				},
+				],
 			},
 			{
-				label: 'Option C',
-				image: [iosSettings, android],
-				isCorrect: true
-			},
-			],
-		},
-		{
-			id: 32,
-			text: '2 Can you identify the Album in your phone?',
-			videos: [test, test],
-			options: [{
-				label: 'Option A',
-				image: [ios, android],
-				isCorrect: false
-			},
-			{
-				label: 'Option B',
-				image: [iosSettings, android],
-				isCorrect: false
-			},
-			{
-				label: 'Option C',
-				image: [iosAlbum, android],
-				isCorrect: true
-			},
-			],
-		},
-		{
-			id: 33,
-			text: '3 Can you identify the App Store on your desktop?',
-			videos: [test, test],
-			options: [{
-				label: 'Option A',
-				image: [ios, android],
-				isCorrect: false
+				id: 63,
+				text: '63 How do you send a text message?',
+				answerText: '1. Opening the message app\n2. Select a contact\n3. typing a message\n4. Pressing Send',
+				images: [iMessage,],
+				videos: [],
+				options: [{
+					label: 'Option A',
+					image: [ios, android],
+					isCorrect: false
+				},
+				{
+					label: 'Option B',
+					image: [set, user],
+					isCorrect: false
+				},
+				{
+					label: 'Option C',
+					image: [amazonPhishing, user],
+					isCorrect: true
+				},
+				],
 			},
 			{
-				label: 'Option B',
-				image: [set, user],
-				isCorrect: false
+				id: 64,
+				text: '4 Can you identify the App Store on your desktop?',
+				videos: [test, test],
+				options: [{
+					label: 'Option A',
+					image: [ios, android],
+					isCorrect: false
+				},
+				{
+					label: 'Option B',
+					image: [set, user],
+					isCorrect: false
+				},
+				{
+					label: 'Option C',
+					image: [ios, user],
+					isCorrect: true
+				},
+				],
 			},
 			{
-				label: 'Option C',
-				image: [amazonPhishing, user],
-				isCorrect: true
+				id: 65,
+				text: '5 Can you identify the App Store on your desktop?',
+				videos: [test, test],
+				options: [{
+					label: 'Option A',
+					image: [ios, android],
+					isCorrect: false
+				},
+				{
+					label: 'Option B',
+					image: [set, user],
+					isCorrect: false
+				},
+				{
+					label: 'Option C',
+					image: [ios, user],
+					isCorrect: true
+				},
+				],
 			},
-			],
-		},
-		{
-			id: 34,
-			text: '4 Can you identify the App Store on your desktop?',
-			videos: [test, test],
-			options: [{
-				label: 'Option A',
-				image: [ios, android],
-				isCorrect: false
-			},
-			{
-				label: 'Option B',
-				image: [set, user],
-				isCorrect: false
-			},
-			{
-				label: 'Option C',
-				image: [ios, user],
-				isCorrect: true
-			},
-			],
-		},
-		{
-			id: 35,
-			text: '5 Can you identify the App Store on your desktop?',
-			videos: [test, test],
-			options: [{
-				label: 'Option A',
-				image: [ios, android],
-				isCorrect: false
-			},
-			{
-				label: 'Option B',
-				image: [set, user],
-				isCorrect: false
-			},
-			{
-				label: 'Option C',
-				image: [ios, user],
-				isCorrect: true
-			},
-			],
-		},
 		],
-		moderate: [{
-			id: 41,
-			text: 'Moderate mobile question example?',
-			options: [{
-				label: 'Option A',
-				image: 'path_to_mobile_image_1',
-				isCorrect: true
-			},
+		moderate: [
 			{
-				label: 'Option B',
-				image: 'path_to_mobile_image_2',
-				isCorrect: false
+				id: 81,
+				text: '81 Which of the following images shows how to unlock a smartphone? ',
+				answerText: 'You can swipe your phone to unlock your smartphone:',
+				images: [swipingPhone],
+				videos: [],
+				options: [{
+					label: 'Swiping Phone',
+					image: [swipingPhone],
+					isCorrect: true
+				},
+				{
+					label: 'Dialing Number',
+					image: [dialingNumber],
+					isCorrect: false
+				},
+				{
+					label: 'Turning off phone',
+					image: [turningOffPhone],
+					isCorrect: false
+				},
+				],
 			},
-			{
-				label: 'Option C',
-				image: 'path_to_mobile_image_3',
-				isCorrect: false
-			},
-			],
-		},
 			// Add more moderate mobile questions...
 		],
-		hard: [{
-			id: 51,
-			text: 'Hard mobile question example?',
-			options: [{
-				label: 'Option A',
-				image: 'path_to_mobile_image_1',
-				isCorrect: false
-			},
+		hard: [
 			{
-				label: 'Option B',
-				image: 'path_to_mobile_image_2',
-				isCorrect: true
+				id: 101,
+				text: '101 Which of the following images shows how to unlock a smartphone? ',
+				answerText: 'You can swipe your phone to unlock your smartphone:',
+				images: [swipingPhone],
+				videos: [],
+				options: [{
+					label: 'Swiping Phone',
+					image: [swipingPhone],
+					isCorrect: true
+				},
+				{
+					label: 'Dialing Number',
+					image: [dialingNumber],
+					isCorrect: false
+				},
+				{
+					label: 'Turning off phone',
+					image: [turningOffPhone],
+					isCorrect: false
+				},
+				],
 			},
-			{
-				label: 'Option C',
-				image: 'path_to_mobile_image_3',
-				isCorrect: false
-			},
-			],
-		},
 			// Add more hard mobile questions...
 		],
 	},
