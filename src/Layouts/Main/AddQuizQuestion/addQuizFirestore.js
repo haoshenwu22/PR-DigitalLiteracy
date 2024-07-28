@@ -43,8 +43,8 @@ export default async function addQuizQuestionToFirestore(questionData) {
 			}),
 		);
 
-		const docRef = await addDoc(questionsCollectionRef, firestoreData);
-		console.log('Question added with ID: ', docRef.id);
+		const questionDocRef = doc(questionsCollectionRef, questionData.id);
+		await setDoc(questionDocRef, firestoreData);
 	} catch (error) {
 		console.error('Error adding question:', error);
 	}

@@ -224,7 +224,7 @@ export default function AddQuizQuestions() {
 							id={`optionIsCorrect${index}`}
 							checked={option.isCorrect}
 							onChange={(e) => handleOptionChange(index, 'isCorrect', e.target.checked)}
-							className="mr-2 leading-tight" // Style checkbox a bit
+							className="mr-2 leading-tight"
 						/>
 						<label htmlFor={`optionIsCorrect${index}`} className="text-gray-700">
 							Is Correct
@@ -234,7 +234,6 @@ export default function AddQuizQuestions() {
 						type="button"
 						onClick={() => handleRemoveOption(index)}
 						className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-						// Button style
 					>
 						Remove Option
 					</button>
@@ -243,8 +242,7 @@ export default function AddQuizQuestions() {
 			<button
 				type="button"
 				onClick={handleAddOption}
-				className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline   
- mt-4"
+				className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-4"
 			>
 				Add Option
 			</button>
