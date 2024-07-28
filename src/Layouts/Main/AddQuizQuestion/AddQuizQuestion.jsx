@@ -1,38 +1,27 @@
 import React, { useState } from 'react';
+import { set } from 'lodash';
 import addQuizQuestionToFirestore from './addQuizFirestore';
 
 export default function AddQuizQuestions() {
 	const [platform, setPlatform] = useState('');
 	const [difficulty, setDifficulty] = useState('');
-	const [images, setImages] = useState([]);
+	const [answerImages, setAnswerImages] = useState([]);
+	const [answerVideos, setAnswerVideos] = useState([]);
 	const [id, setId] = useState('');
 	const [answerText, setAnswerText] = useState('');
-	const [question, setQuestion] = useState({
-		text: '',
-		videos: [],
-		images: [],
-		options: [],
-	});
+	const [questionText, setQuestionText] = useState('');
+	const [options, setOptions] = useState([]);
 
 	const handleOptionChange = (index, field, value) => {
-		setQuestion((prevQuestion) => ({
-			...prevQuestion,
-			options: prevQuestion.options.map((option, i) => (i === index ? { ...option, [field]: value } : option)),
-		}));
+		setOptions((prevOptions) => prevOptions.map((option, i) => (i === index ? { ...option, [field]: value } : option)));
 	};
 
 	const handleAddOption = () => {
-		setQuestion((prevQuestion) => ({
-			...prevQuestion,
-			options: [...prevQuestion.options, { label: '', images: [], isCorrect: false }],
-		}));
+		setOptions((prevOptions) => [...prevOptions, { label: '', images: [], isCorrect: false }]);
 	};
 
 	const handleRemoveOption = (index) => {
-		setQuestion((prevQuestion) => ({
-			...prevQuestion,
-			options: prevQuestion.options.filter((_, i) => i !== index),
-		}));
+		setOptions((prevOptions) => prevOptions.filter((_, i) => i !== index));
 	};
 
 	const handleSubmit = async (e) => {
@@ -42,10 +31,10 @@ export default function AddQuizQuestions() {
 			platform,
 			difficulty,
 			id,
-			text: question.text,
-			images,
+			questionText,
+			answerImages,
 			answerText,
-			options: question.options,
+			options,
 		};
 
 		try {
@@ -56,14 +45,13 @@ export default function AddQuizQuestions() {
 			setPlatform('');
 			setDifficulty('');
 			setId('');
-			setQuestion({
-				text: '',
-				videos: [],
-				images: [],
-				options: [],
-			});
+
 			setAnswerText('');
-			setImages([]);
+			setAnswerVideos([]);
+			setOptions([]);
+
+			setQuestionText('');
+			setAnswerImages([]);
 		} catch (error) {
 			console.error('Error adding question:', error);
 		}
@@ -73,25 +61,18 @@ export default function AddQuizQuestions() {
 		e.preventDefault();
 		const files = Array.from(e.dataTransfer.files);
 
-		setQuestion((prevQuestion) => ({
-			...prevQuestion,
-			options: prevQuestion.options.map((option, index) => {
-				if (index === optionIndex) {
-					return {
-						...option,
-						images: [...option.images, ...files],
-					};
-				}
-				return option;
-			}),
-		}));
+		setOptions((prevOptions) =>
+			prevOptions.map((option, index) =>
+				index === optionIndex ? { ...option, images: [...option.images, ...files] } : option,
+			),
+		);
 	};
 
-	const handleImageDrop = (e, field) => {
+	const handleImageDrop = (e) => {
 		e.preventDefault();
 		const files = Array.from(e.dataTransfer.files);
 
-		setImages((prevImages) => [...prevImages, ...files]);
+		setAnswerImages((prevImages) => [...prevImages, ...files]);
 	};
 
 	const handleImageDragOver = (e) => {
@@ -149,28 +130,12 @@ export default function AddQuizQuestions() {
 				</label>
 				<textarea
 					id="text"
-					value={question.text}
-					onChange={(e) => setQuestion((prevQuestion) => ({ ...prevQuestion, text: e.target.value }))}
+					value={questionText}
+					onChange={(e) => setQuestionText(e.target.value)}
 					className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline h-20"
 				/>
 			</div>
-			<div
-				onDrop={(e) => handleImageDrop(e, 'images')}
-				className="mt-6"
-				style={{ border: '2px dashed #ccc', padding: '20px', cursor: 'pointer' }}
-			>
-				<p className="text-gray-500">Drag & Drop Images for Question</p>
-				<div className="flex flex-wrap">
-					{images.map((image, index) => (
-						<img
-							key={index}
-							src={URL.createObjectURL(image)}
-							alt={`Question Image ${index}`}
-							className="max-w-xs h-auto mr-2 mb-2 rounded-md"
-						/>
-					))}
-				</div>
-			</div>
+
 			<div>
 				<label htmlFor="answerText" className="block text-gray-700 font-bold mb-2 mt-6">
 					Answer Text:
@@ -183,8 +148,25 @@ export default function AddQuizQuestions() {
 					className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline h-20"
 				/>
 			</div>
+			<div
+				onDrop={(e) => handleImageDrop(e, 'images')}
+				className="mt-8"
+				style={{ border: '2px dashed #ccc', padding: '20px', cursor: 'pointer' }}
+			>
+				<p className="text-gray-500">Drag & Drop Images for Answers</p>
+				<div className="flex flex-wrap">
+					{answerImages.map((image, index) => (
+						<img
+							key={index}
+							src={URL.createObjectURL(image)}
+							alt={`Question Image ${index}`}
+							className="max-w-xs h-auto mr-2 mb-2 rounded-md"
+						/>
+					))}
+				</div>
+			</div>
 			<h3 className="text-lg font-bold mb-4 mt-6">Options:</h3>
-			{question.options.map((option, index) => (
+			{options.map((option, index) => (
 				<div key={index} className="mb-4 border rounded-md p-4 shadow-sm">
 					<div className="mb-2">
 						<label htmlFor={`optionLabel${index}`} className="block text-gray-700 font-bold mb-2">
