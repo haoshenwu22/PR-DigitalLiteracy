@@ -1,14 +1,13 @@
-import { getFirestore, collection, doc, setDoc, addDoc } from 'firebase/firestore';
+import { getFirestore, collection, doc, setDoc, addDoc, getDoc, query, getDocs, where } from 'firebase/firestore';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { db } from '../../../firebase/firebase';
 
-const storage = getStorage();
-
 export default async function addQuizQuestionToFirestore(questionData) {
 	try {
-		const videoTypeRef = doc(db, 'quiz', questionData.platform);
-		const difficultyDocRef = doc(videoTypeRef, 'difficulty', questionData.difficulty);
-		const questionsCollectionRef = collection(difficultyDocRef, 'questions');
+		const quizCollectionRef = collection(db, 'quiz');
+		const platformDocRef = doc(quizCollectionRef, questionData.platform);
+		const difficultyDocRef = doc(platformDocRef, 'difficulty', questionData.difficulty);
+		const questionDocRef = doc(difficultyDocRef, 'questions', questionData.id);
 
 		const firestoreData = { ...questionData };
 
@@ -43,9 +42,54 @@ export default async function addQuizQuestionToFirestore(questionData) {
 			}),
 		);
 
-		const questionDocRef = doc(questionsCollectionRef, questionData.id);
+		// Use setDoc with an empty object to create the documents if they don't exist
+		await setDoc(platformDocRef, { platform: questionData.platform });
+		await setDoc(difficultyDocRef, { difficulty: questionData.difficulty });
+
+		// Set the question data (this will either create a new document or overwrite if it exists)
 		await setDoc(questionDocRef, firestoreData);
+		console.log('Question added/updated successfully!');
 	} catch (error) {
 		console.error('Error adding question:', error);
+	}
+}
+
+export async function retrieveAllQuestionsForPlatform(platform) {
+	try {
+		const platformDocRef = doc(db, 'quiz', platform);
+		const platformDocSnapshot = await getDoc(platformDocRef);
+
+		if (!platformDocSnapshot.exists()) {
+			console.warn(`No platform found with name ${platform}`);
+			return null;
+		}
+
+		const difficultyCollectionRef = collection(platformDocRef, 'difficulty');
+		const difficultySnapshot = await getDocs(difficultyCollectionRef);
+
+		const questionsByDifficulty = {
+			easy: [],
+			medium: [],
+			hard: [],
+		};
+
+		for (const difficultyDoc of difficultySnapshot.docs) {
+			const difficultyId = difficultyDoc.id;
+			const questionsCollectionRef = collection(difficultyDoc.ref, 'questions');
+			const questionsSnapshot = await getDocs(questionsCollectionRef);
+
+			for (const questionDoc of questionsSnapshot.docs) {
+				const questionData = questionDoc.data();
+				questionsByDifficulty[difficultyId].push({
+					...questionData,
+					id: questionDoc.id,
+				});
+			}
+		}
+
+		return { [platform]: questionsByDifficulty };
+	} catch (error) {
+		console.error(`Error retrieving questions for platform ${platform}:`, error);
+		throw error;
 	}
 }
