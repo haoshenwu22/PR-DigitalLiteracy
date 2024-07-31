@@ -138,12 +138,8 @@ export default function AddQuizQuestions() {
 	};
 
 	return (
-		<form
-			onSubmit={handleSubmit}
-			onDragOver={handleImageDragOver}
-			className="bg-white p-8 rounded-lg shadow-md text-primaryColor"
-		>
-			<section className="bg-backgroundColor shadow-md rounded-xl py-12 px-12">
+		<form onSubmit={handleSubmit} onDragOver={handleImageDragOver} className="px-8 text-primaryColor">
+			<section className="bg-backgroundColor shadow-md rounded-xl p-12">
 				<label htmlFor="platform" className="block text-gray-700 font-bold mb-2">
 					Platform:
 					<select
@@ -242,7 +238,7 @@ export default function AddQuizQuestions() {
 				</div>
 			</section>
 
-			<section className="bg-backgroundColor shadow-md rounded-xl py-12 px-12 mt-10 text-primaryColor">
+			<section className="bg-backgroundColor shadow-md rounded-xl p-12 mt-10">
 				<h3 className="text-lg font-bold mb-4 mt-6">Options:</h3>
 				{options.map((option, optionIndex) => (
 					<div key={option.id} className="mb-6 border-2 rounded-md p-4 shadow-sm">
