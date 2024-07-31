@@ -2,9 +2,17 @@ import React, { useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { ToastContainer, toast, Zoom } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
 import addQuizQuestionToFirestore from './addQuizFirestore';
 
+/**
+ * AddQuizQuestions Component
+ *
+ * This component provides a form for adding new quiz questions to a quiz.
+ * It includes fields for platform, difficulty, question text, answer text, and multiple-choice options.
+ * Questions and answers can be uploaded as images.
+ *
+ * @returns {JSX.Element} The AddQuizQuestions form.
+ */
 export default function AddQuizQuestions() {
 	const [platform, setPlatform] = useState('');
 	const [difficulty, setDifficulty] = useState('');
@@ -32,6 +40,17 @@ export default function AddQuizQuestions() {
 		try {
 			await addQuizQuestionToFirestore(questionData);
 
+			// Reset form fields
+			setPlatform('');
+			setDifficulty('');
+			setId('');
+			setQuestionText('');
+			setQuestionImages([]);
+			setAnswerText('');
+			setAnswerImages([]);
+			setOptions([]);
+
+			// Display success message
 			toast.success('Question Added Successfully!', {
 				position: 'bottom-center',
 				autoClose: 5000,
@@ -43,18 +62,6 @@ export default function AddQuizQuestions() {
 				theme: 'light',
 				transition: Zoom,
 			});
-
-			// Reset form fields
-			setPlatform('');
-			setDifficulty('');
-			setId('');
-
-			setQuestionText('');
-			setQuestionImages([]);
-			setAnswerText('');
-			setAnswerImages([]);
-
-			setOptions([]);
 		} catch (error) {
 			toast.error(`Error adding video: ${error.message}`, {
 				position: 'bottom-center',
@@ -78,6 +85,7 @@ export default function AddQuizQuestions() {
 		e.preventDefault();
 		const files = Array.from(e.dataTransfer.files);
 
+		// Map files to an array of objects with a unique ID and the file itself
 		const uploadedImages = files.map((file) => ({
 			id: uuidv4(),
 			file,
@@ -90,6 +98,7 @@ export default function AddQuizQuestions() {
 		e.preventDefault();
 		const files = Array.from(e.dataTransfer.files);
 
+		// Map files to an array of objects with a unique ID and the file itself
 		const uploadedImages = files.map((file) => ({
 			id: uuidv4(),
 			file,
@@ -102,6 +111,7 @@ export default function AddQuizQuestions() {
 		e.preventDefault();
 		const files = Array.from(e.dataTransfer.files);
 
+		// Map files to an array of objects with a unique ID and the file itself
 		const uploadedImages = files.map((file) => ({
 			id: uuidv4(),
 			file,
@@ -119,6 +129,7 @@ export default function AddQuizQuestions() {
 	};
 
 	const handleAddOption = () => {
+		// Generate a unique ID for the new option
 		setOptions((prevOptions) => [...prevOptions, { id: uuidv4(), label: '', images: [], isCorrect: false }]);
 	};
 
@@ -133,63 +144,55 @@ export default function AddQuizQuestions() {
 			className="bg-white p-8 rounded-lg shadow-md text-primaryColor"
 		>
 			<section className="bg-backgroundColor shadow-md rounded-xl py-12 px-12">
-				<div>
-					<label htmlFor="platform" className="block text-gray-700 font-bold mb-2">
-						Platform:
-						<select
-							id="platform"
-							value={platform}
-							onChange={(e) => setPlatform(e.target.value)}
-							className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-						>
-							<option value="">Select Platform</option>
-							<option value="mobile">Mobile</option>
-							<option value="desktop">Desktop</option>
-						</select>
-					</label>
-				</div>
+				<label htmlFor="platform" className="block text-gray-700 font-bold mb-2">
+					Platform:
+					<select
+						id="platform"
+						value={platform}
+						onChange={(e) => setPlatform(e.target.value)}
+						className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+					>
+						<option value="">Select Platform</option>
+						<option value="mobile">Mobile</option>
+						<option value="desktop">Desktop</option>
+					</select>
+				</label>
 
-				<div>
-					<label htmlFor="difficulty" className="block text-gray-700 font-bold mb-2 mt-6">
-						Difficulty:
-						<select
-							id="difficulty"
-							value={difficulty}
-							onChange={(e) => setDifficulty(e.target.value)}
-							className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-						>
-							<option value="">Select Difficulty</option>
-							<option value="easy">Easy</option>
-							<option value="medium">Medium</option>
-							<option value="hard">Hard</option>
-						</select>
-					</label>
-				</div>
+				<label htmlFor="difficulty" className="block text-gray-700 font-bold mb-2 mt-6">
+					Difficulty:
+					<select
+						id="difficulty"
+						value={difficulty}
+						onChange={(e) => setDifficulty(e.target.value)}
+						className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+					>
+						<option value="">Select Difficulty</option>
+						<option value="easy">Easy</option>
+						<option value="medium">Medium</option>
+						<option value="hard">Hard</option>
+					</select>
+				</label>
 
-				<div>
-					<label htmlFor="id" className="block text-gray-700 font-bold mb-2 mt-6">
-						ID:
-						<input
-							type="text"
-							id="id"
-							value={id}
-							onChange={(e) => setId(e.target.value)}
-							className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-						/>
-					</label>
-				</div>
+				<label htmlFor="id" className="block text-gray-700 font-bold mb-2 mt-6">
+					ID:
+					<input
+						type="text"
+						id="id"
+						value={id}
+						onChange={(e) => setId(e.target.value)}
+						className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+					/>
+				</label>
 
-				<div>
-					<label htmlFor="text" className="block text-gray-700 font-bold mb-2 mt-6">
-						Question Text:
-						<textarea
-							id="text"
-							value={questionText}
-							onChange={(e) => setQuestionText(e.target.value)}
-							className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline h-20"
-						/>
-					</label>
-				</div>
+				<label htmlFor="text" className="block text-gray-700 font-bold mb-2 mt-6">
+					Question Text:
+					<textarea
+						id="text"
+						value={questionText}
+						onChange={(e) => setQuestionText(e.target.value)}
+						className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline h-20"
+					/>
+				</label>
 
 				<div
 					onDrop={(e) => handleQuestionImageDrop(e, 'images')}
@@ -209,18 +212,16 @@ export default function AddQuizQuestions() {
 					</div>
 				</div>
 
-				<div>
-					<label htmlFor="answerText" className="block text-gray-700 font-bold mb-2 mt-6">
-						Answer Text:
-						<textarea
-							type="text"
-							id="answerText"
-							value={answerText}
-							onChange={(e) => setAnswerText(e.target.value)}
-							className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline h-20"
-						/>
-					</label>
-				</div>
+				<label htmlFor="answerText" className="block text-gray-700 font-bold mb-2 mt-6">
+					Answer Text:
+					<textarea
+						type="text"
+						id="answerText"
+						value={answerText}
+						onChange={(e) => setAnswerText(e.target.value)}
+						className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline h-20"
+					/>
+				</label>
 
 				<div
 					onDrop={(e) => handleAnswerImageDrop(e, 'images')}
@@ -244,19 +245,17 @@ export default function AddQuizQuestions() {
 			<section className="bg-backgroundColor shadow-md rounded-xl py-12 px-12 mt-10 text-primaryColor">
 				<h3 className="text-lg font-bold mb-4 mt-6">Options:</h3>
 				{options.map((option, optionIndex) => (
-					<div key={option.id} className="mb-4 border-2 rounded-md p-4 shadow-sm">
-						<div className="mb-2">
-							<label htmlFor={`optionLabel${optionIndex}`} className="block text-gray-700 font-bold mb-2">
-								Label:
-								<input
-									type="text"
-									id={`optionLabel${optionIndex}`}
-									value={option.label}
-									onChange={(e) => handleOptionChange(optionIndex, 'label', e.target.value)}
-									className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-								/>
-							</label>
-						</div>
+					<div key={option.id} className="mb-6 border-2 rounded-md p-4 shadow-sm">
+						<label htmlFor={`optionLabel${optionIndex}`} className="block text-gray-700 font-bold mb-2">
+							Label:
+							<input
+								type="text"
+								id={`optionLabel${optionIndex}`}
+								value={option.label}
+								onChange={(e) => handleOptionChange(optionIndex, 'label', e.target.value)}
+								className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+							/>
+						</label>
 
 						<div
 							onDrop={(e) => handleOptionImageDrop(e, optionIndex)}
@@ -306,6 +305,7 @@ export default function AddQuizQuestions() {
 					Add Option
 				</button>
 			</section>
+
 			<div className="flex justify-center mt-8">
 				<button
 					type="submit"
