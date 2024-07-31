@@ -1,15 +1,15 @@
 import React from 'react';
-import { Button } from '@mui/material';
 import PropTypes from 'prop-types';
-import { Colors } from '../../../../constants/Colors';
 
 export default function SubmitButton({ handleSubmit, submitText }) {
 	return (
-		<div>
-			<Button variant="contained" onClick={handleSubmit} sx={{ bgcolor: Colors.primaryColor }}>
-				{submitText}
-			</Button>
-		</div>
+		<button
+			onClick={handleSubmit}
+			className="px-8 py-2 rounded-lg bg-primaryColor hover:bg-lightBlue font-semibold text-white"
+			type="button"
+		>
+			{submitText}
+		</button>
 	);
 }
 

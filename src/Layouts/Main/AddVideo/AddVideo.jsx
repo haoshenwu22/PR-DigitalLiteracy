@@ -522,11 +522,13 @@ function AddVideo({ videoData }) {
 					setUserInputStopTimes={setUserInputStopTimes}
 				/>
 
-				{videoData ? (
-					<SubmitButton handleSubmit={handleSubmit} submitText="Update" />
-				) : (
-					<SubmitButton handleSubmit={handleSubmit} submitText="Submit" />
-				)}
+				<div className="flex">
+					{videoData ? (
+						<SubmitButton handleSubmit={handleSubmit} submitText="Update" />
+					) : (
+						<SubmitButton handleSubmit={handleSubmit} submitText="Submit" />
+					)}
+				</div>
 			</section>
 			{popup && popup.visible && (
 				<Popup title={popup.title} icon={popup.icon} handleClose={() => setPopup(null)} text={popup.text} />
