@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { set } from 'lodash';
 import addQuizQuestionToFirestore from './addQuizFirestore';
 
 export default function AddQuizQuestions() {
@@ -7,6 +6,7 @@ export default function AddQuizQuestions() {
 	const [difficulty, setDifficulty] = useState('');
 	const [answerImages, setAnswerImages] = useState([]);
 	const [answerVideos, setAnswerVideos] = useState([]);
+	const [questionImages, setQuestionImages] = useState([]);
 	const [id, setId] = useState('');
 	const [answerText, setAnswerText] = useState('');
 	const [questionText, setQuestionText] = useState('');
@@ -32,8 +32,9 @@ export default function AddQuizQuestions() {
 			difficulty,
 			id,
 			questionText,
-			answerImages,
+			questionImages,
 			answerText,
+			answerImages,
 			options,
 		};
 
@@ -52,6 +53,7 @@ export default function AddQuizQuestions() {
 
 			setQuestionText('');
 			setAnswerImages([]);
+			setQuestionImages([]);
 		} catch (error) {
 			console.error('Error adding question:', error);
 		}
@@ -68,11 +70,18 @@ export default function AddQuizQuestions() {
 		);
 	};
 
-	const handleImageDrop = (e) => {
+	const handleAnswerImageDrop = (e) => {
 		e.preventDefault();
 		const files = Array.from(e.dataTransfer.files);
 
 		setAnswerImages((prevImages) => [...prevImages, ...files]);
+	};
+
+	const handleQuestionImageDrop = (e) => {
+		e.preventDefault();
+		const files = Array.from(e.dataTransfer.files);
+
+		setQuestionImages((prevImages) => [...prevImages, ...files]);
 	};
 
 	const handleImageDragOver = (e) => {
@@ -96,6 +105,7 @@ export default function AddQuizQuestions() {
 					<option value="desktop">Desktop</option>
 				</select>
 			</div>
+
 			<div>
 				<label htmlFor="difficulty" className="block text-gray-700 font-bold mb-2 mt-6">
 					Difficulty:
@@ -112,6 +122,7 @@ export default function AddQuizQuestions() {
 					<option value="hard">Hard</option>
 				</select>
 			</div>
+
 			<div>
 				<label htmlFor="id" className="block text-gray-700 font-bold mb-2 mt-6">
 					ID:
@@ -124,6 +135,7 @@ export default function AddQuizQuestions() {
 					className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
 				/>
 			</div>
+
 			<div>
 				<label htmlFor="text" className="block text-gray-700 font-bold mb-2 mt-6">
 					Question Text:
@@ -134,6 +146,24 @@ export default function AddQuizQuestions() {
 					onChange={(e) => setQuestionText(e.target.value)}
 					className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline h-20"
 				/>
+			</div>
+
+			<div
+				onDrop={(e) => handleQuestionImageDrop(e, 'images')}
+				className="mt-8"
+				style={{ border: '2px dashed #ccc', padding: '20px', cursor: 'pointer' }}
+			>
+				<p className="text-gray-500">Drag & Drop Images for Question</p>
+				<div className="flex flex-wrap">
+					{questionImages.map((image, index) => (
+						<img
+							key={index}
+							src={URL.createObjectURL(image)}
+							alt={`Question Image ${index}`}
+							className="max-w-xs h-auto mr-2 mb-2 rounded-md"
+						/>
+					))}
+				</div>
 			</div>
 
 			<div>
@@ -148,8 +178,9 @@ export default function AddQuizQuestions() {
 					className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline h-20"
 				/>
 			</div>
+
 			<div
-				onDrop={(e) => handleImageDrop(e, 'images')}
+				onDrop={(e) => handleAnswerImageDrop(e, 'images')}
 				className="mt-8"
 				style={{ border: '2px dashed #ccc', padding: '20px', cursor: 'pointer' }}
 			>
@@ -159,12 +190,13 @@ export default function AddQuizQuestions() {
 						<img
 							key={index}
 							src={URL.createObjectURL(image)}
-							alt={`Question Image ${index}`}
+							alt={`Answer Image ${index}`}
 							className="max-w-xs h-auto mr-2 mb-2 rounded-md"
 						/>
 					))}
 				</div>
 			</div>
+
 			<h3 className="text-lg font-bold mb-4 mt-6">Options:</h3>
 			{options.map((option, index) => (
 				<div key={index} className="mb-4 border rounded-md p-4 shadow-sm">

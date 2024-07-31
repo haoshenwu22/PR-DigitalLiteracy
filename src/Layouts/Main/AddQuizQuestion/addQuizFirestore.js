@@ -11,6 +11,19 @@ export default async function addQuizQuestionToFirestore(questionData) {
 
 		const firestoreData = { ...questionData };
 
+		// Convert main question images to Base64
+		firestoreData.questionImages = await Promise.all(
+			questionData.questionImages.map(
+				async (imageFile) =>
+					new Promise((resolve, reject) => {
+						const reader = new FileReader();
+						reader.readAsDataURL(imageFile);
+						reader.onload = () => resolve(reader.result);
+						reader.onerror = (error) => reject(error);
+					}),
+			),
+		);
+
 		// Convert main answer images to Base64
 		firestoreData.answerImages = await Promise.all(
 			questionData.answerImages.map(
