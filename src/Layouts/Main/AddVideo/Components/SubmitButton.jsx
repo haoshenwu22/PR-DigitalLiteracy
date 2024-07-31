@@ -5,7 +5,7 @@ export default function SubmitButton({ handleSubmit, submitText }) {
 	return (
 		<button
 			onClick={handleSubmit}
-			className="px-8 py-2 rounded-lg bg-primaryColor hover:bg-lightBlue font-semibold text-white"
+			className="px-12 py-2 rounded-lg bg-primaryColor hover:bg-lightBlue font-semibold text-white"
 			type="button"
 		>
 			{submitText}

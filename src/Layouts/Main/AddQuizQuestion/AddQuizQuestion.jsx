@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { ToastContainer, toast, Zoom } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import addQuizQuestionToFirestore from './addQuizFirestore';
+import SubmitButton from '../AddVideo/Components/SubmitButton';
 
 /**
  * AddQuizQuestions Component
@@ -138,7 +139,7 @@ export default function AddQuizQuestions() {
 	};
 
 	return (
-		<form onSubmit={handleSubmit} onDragOver={handleImageDragOver} className="px-8 text-primaryColor">
+		<form onDragOver={handleImageDragOver} className="px-8 text-primaryColor">
 			<section className="bg-backgroundColor shadow-md rounded-xl p-12">
 				<label htmlFor="platform" className="block text-gray-700 font-bold mb-2">
 					Platform:
@@ -303,12 +304,7 @@ export default function AddQuizQuestions() {
 			</section>
 
 			<div className="flex justify-center mt-8">
-				<button
-					type="submit"
-					className="bg-primaryColor hover:bg-primaryColorLight text-white font-bold py-2 px-12 text-lg rounded focus:outline-none focus:shadow-outline"
-				>
-					Submit
-				</button>
+				<SubmitButton handleSubmit={handleSubmit} submitText="Submit" />
 				<ToastContainer />
 			</div>
 		</form>
