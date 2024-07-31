@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
+import { ToastContainer, toast, Zoom } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 import addQuizQuestionToFirestore from './addQuizFirestore';
 
 export default function AddQuizQuestions() {
@@ -8,7 +11,6 @@ export default function AddQuizQuestions() {
 	const [id, setId] = useState('');
 	const [answerText, setAnswerText] = useState('');
 	const [answerImages, setAnswerImages] = useState([]);
-	// const [answerVideos, setAnswerVideos] = useState([]);
 	const [questionImages, setQuestionImages] = useState([]);
 	const [questionText, setQuestionText] = useState('');
 	const [options, setOptions] = useState([]);
@@ -29,7 +31,18 @@ export default function AddQuizQuestions() {
 
 		try {
 			await addQuizQuestionToFirestore(questionData);
-			console.log('Question added successfully!');
+
+			toast.success('Question Added Successfully!', {
+				position: 'bottom-center',
+				autoClose: 5000,
+				hideProgressBar: false,
+				closeOnClick: true,
+				pauseOnHover: true,
+				draggable: true,
+				progress: undefined,
+				theme: 'light',
+				transition: Zoom,
+			});
 
 			// Reset form fields
 			setPlatform('');
@@ -40,11 +53,20 @@ export default function AddQuizQuestions() {
 			setQuestionImages([]);
 			setAnswerText('');
 			setAnswerImages([]);
-			// setAnswerVideos([]);
 
 			setOptions([]);
 		} catch (error) {
-			console.error('Error adding question:', error);
+			toast.error(`Error adding video: ${error.message}`, {
+				position: 'bottom-center',
+				autoClose: 5000,
+				hideProgressBar: false,
+				closeOnClick: true,
+				pauseOnHover: true,
+				draggable: true,
+				progress: undefined,
+				theme: 'light',
+				transition: Zoom,
+			});
 		}
 	};
 
@@ -291,6 +313,7 @@ export default function AddQuizQuestions() {
 				>
 					Submit
 				</button>
+				<ToastContainer />
 			</div>
 		</form>
 	);
