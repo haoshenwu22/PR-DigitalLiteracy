@@ -3,7 +3,11 @@ import { v4 as uuidv4 } from 'uuid';
 import { ToastContainer, toast, Zoom } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import addQuizQuestionToFirestore from './addQuizFirestore';
-import SubmitButton from '../AddVideo/Components/SubmitButton';
+import Button from '../AddVideo/Components/Button';
+import TextAreaField from '../AddVideo/Components/TextAreaField';
+import TextInputField from '../AddVideo/Components/TextInputField';
+import SelectionInputField from '../AddVideo/Components/SelectionInputField';
+import ImageInputField from '../AddVideo/Components/ImageInputField';
 
 /**
  * AddQuizQuestions Component
@@ -140,138 +144,92 @@ export default function AddQuizQuestions() {
 
 	return (
 		<form onDragOver={handleImageDragOver} className="px-8 text-primaryColor">
-			<section className="bg-backgroundColor shadow-md rounded-xl p-12">
-				<label htmlFor="platform" className="block text-gray-700 font-bold mb-2">
-					Platform:
-					<select
-						id="platform"
-						value={platform}
-						onChange={(e) => setPlatform(e.target.value)}
-						className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-					>
-						<option value="">Select Platform</option>
-						<option value="mobile">Mobile</option>
-						<option value="desktop">Desktop</option>
-					</select>
-				</label>
+			<section className="flex flex-col gap-6 bg-backgroundColor shadow-md rounded-xl p-12">
+				<SelectionInputField
+					headerText="Platform:"
+					inputLabel="Select Platform"
+					value={platform}
+					onChangeFunction={setPlatform}
+					id="platformSelectionField_"
+					selectionFields={[
+						{ type: 'header', text: 'Select Platform' },
+						{ type: 'selection', value: 'mobile', text: 'Mobile' },
+						{ type: 'selection', value: 'desktop', text: 'Desktop' },
+					]}
+				/>
 
-				<label htmlFor="difficulty" className="block text-gray-700 font-bold mb-2 mt-6">
-					Difficulty:
-					<select
-						id="difficulty"
-						value={difficulty}
-						onChange={(e) => setDifficulty(e.target.value)}
-						className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-					>
-						<option value="">Select Difficulty</option>
-						<option value="easy">Easy</option>
-						<option value="medium">Medium</option>
-						<option value="hard">Hard</option>
-					</select>
-				</label>
+				<SelectionInputField
+					headerText="Difficulty:"
+					inputLabel="Select Difficulty"
+					value={difficulty}
+					onChangeFunction={setDifficulty}
+					id="difficultySelectionField_"
+					selectionFields={[
+						{ type: 'header', text: 'Select Difficulty' },
+						{ type: 'selection', value: 'easy', text: 'Easy' },
+						{ type: 'selection', value: 'medium', text: 'Medium' },
+						{ type: 'selection', value: 'hard', text: 'Hard' },
+					]}
+				/>
 
-				<label htmlFor="id" className="block text-gray-700 font-bold mb-2 mt-6">
-					ID:
-					<input
-						type="text"
-						id="id"
-						value={id}
-						onChange={(e) => setId(e.target.value)}
-						className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-					/>
-				</label>
+				<TextInputField
+					headerText="ID:"
+					placeholder="Enter Question ID"
+					value={id}
+					onChangeFunction={setId}
+					id="idTextField_"
+				/>
 
-				<label htmlFor="text" className="block text-gray-700 font-bold mb-2 mt-6">
-					Question Text:
-					<textarea
-						id="text"
-						value={questionText}
-						onChange={(e) => setQuestionText(e.target.value)}
-						className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline h-20"
-					/>
-				</label>
+				<TextAreaField
+					headerText="Question Text:"
+					placeholder="Enter Question Text"
+					value={questionText}
+					onChangeFunction={setQuestionText}
+					id="questionTextField_"
+				/>
 
-				<div
-					onDrop={(e) => handleQuestionImageDrop(e, 'images')}
-					className="mt-8"
-					style={{ border: '2px dashed #ccc', padding: '20px', cursor: 'pointer' }}
-				>
-					<p className="text-gray-500">Drag & Drop Images for Question</p>
-					<div className="flex flex-wrap">
-						{questionImages.map((image, index) => (
-							<img
-								key={image.id}
-								src={URL.createObjectURL(image.file)}
-								alt={`Question Index ${index}`}
-								className="max-w-xs h-auto mr-2 mb-2 rounded-md"
-							/>
-						))}
-					</div>
-				</div>
+				<ImageInputField
+					headerText="Question Image:"
+					placeholder="Upload Question Image"
+					value={questionImages}
+					onChangeFunction={handleQuestionImageDrop}
+					id="questionImageField_"
+				/>
 
-				<label htmlFor="answerText" className="block text-gray-700 font-bold mb-2 mt-6">
-					Answer Text:
-					<textarea
-						type="text"
-						id="answerText"
-						value={answerText}
-						onChange={(e) => setAnswerText(e.target.value)}
-						className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline h-20"
-					/>
-				</label>
+				<TextAreaField
+					headerText="Answer Text:"
+					placeholder="Enter Answer Text"
+					value={answerText}
+					onChangeFunction={setAnswerText}
+					id="answerTextField_"
+				/>
 
-				<div
-					onDrop={(e) => handleAnswerImageDrop(e, 'images')}
-					className="mt-8"
-					style={{ border: '2px dashed #ccc', padding: '20px', cursor: 'pointer' }}
-				>
-					<p className="text-gray-500">Drag & Drop Images for Answers</p>
-					<div className="flex flex-wrap">
-						{answerImages.map((image, index) => (
-							<img
-								key={image.id}
-								src={URL.createObjectURL(image.file)}
-								alt={`Answer Index ${index}`}
-								className="max-w-xs h-auto mr-2 mb-2 rounded-md"
-							/>
-						))}
-					</div>
-				</div>
+				<ImageInputField
+					headerText="Answer Image:"
+					placeholder="Upload Answer Image"
+					value={answerImages}
+					onChangeFunction={handleAnswerImageDrop}
+					id="answerImageField_"
+				/>
 			</section>
 
 			<section className="bg-backgroundColor shadow-md rounded-xl p-12 mt-10">
 				<h3 className="text-lg font-bold mb-4 mt-6">Options:</h3>
 				{options.map((option, optionIndex) => (
-					<div key={option.id} className="mb-6 border-2 rounded-md p-4 shadow-sm">
-						<label htmlFor={`optionLabel${optionIndex}`} className="block text-gray-700 font-bold mb-2">
-							Label:
-							<input
-								type="text"
-								id={`optionLabel${optionIndex}`}
-								value={option.label}
-								onChange={(e) => handleOptionChange(optionIndex, 'label', e.target.value)}
-								className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-							/>
-						</label>
+					<div key={option.id} className="flex flex-col gap-2 mb-6 border-2 rounded-md p-4 shadow-sm">
+						<TextInputField
+							headerText={`Option ${optionIndex + 1}:`}
+							placeholder={`Enter Text for Option ${optionIndex + 1}`}
+							value={option.label}
+							onChangeFunction={(value) => handleOptionChange(optionIndex, 'label', value)}
+							id={`optionLabel${optionIndex}`}
+						/>
 
-						<div
-							onDrop={(e) => handleOptionImageDrop(e, optionIndex)}
-							className="mb-2 border-2 border-dashed border-gray-300 p-4 flex flex-wrap cursor-pointer"
-						>
-							<div className="mb-2">
-								<p className="text-gray-500">Drag & Drop Images for Option {optionIndex + 1}</p>
-								<div className="flex flex-wrap">
-									{option.images.map((image, imgIndex) => (
-										<img
-											key={image.id}
-											src={URL.createObjectURL(image.file)}
-											alt={`Option ${optionIndex + 1} Index ${imgIndex}`}
-											className="max-w-xs h-auto mr-2 mb-2 rounded-md"
-										/>
-									))}
-								</div>
-							</div>
-						</div>
+						<ImageInputField
+							onChangeFunction={(e) => handleOptionImageDrop(e, optionIndex)}
+							value={option.images}
+							placeholder={`Drag & Drop Images for Option ${optionIndex + 1}`}
+						/>
 
 						<div className="flex items-center mb-2">
 							<label htmlFor={`optionIsCorrect${optionIndex}`} className="text-gray-700">
@@ -285,13 +243,15 @@ export default function AddQuizQuestions() {
 								/>
 							</label>
 						</div>
-						<button
-							type="button"
-							onClick={() => handleRemoveOption(optionIndex)}
-							className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-						>
-							Remove Option
-						</button>
+						<div className="flex">
+							<button
+								type="button"
+								onClick={() => handleRemoveOption(optionIndex)}
+								className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+							>
+								Remove Option
+							</button>
+						</div>
 					</div>
 				))}
 				<button
@@ -304,7 +264,7 @@ export default function AddQuizQuestions() {
 			</section>
 
 			<div className="flex justify-center mt-8">
-				<SubmitButton handleSubmit={handleSubmit} submitText="Submit" />
+				<Button onChangeFunction={handleSubmit} text="Submit" />
 				<ToastContainer />
 			</div>
 		</form>
