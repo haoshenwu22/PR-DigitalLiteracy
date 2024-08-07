@@ -1,8 +1,9 @@
 import React from 'react';
-import { Checkbox, FormControlLabel } from '@mui/material';
 import PropTypes from 'prop-types';
 import TextInputField from '../Components/TextInputField';
 import TextAreaField from '../Components/TextAreaField';
+import CheckboxInputField from '../Components/CheckboxInputField';
+import Button from '../Components/Button';
 
 export default function MessageInputSection({
 	handleAddSegment,
@@ -21,15 +22,12 @@ export default function MessageInputSection({
 		<div key={messages.length - index - 1} className="flex flex-col gap-6">
 			<div className="flex justify-between items-center">
 				<div className="text-primaryColor font-semibold font-sans">Segment #{messages.length - index}</div>
-				<button
-					type="button"
-					className="text-primaryColor font-semibold font-sans"
-					onClick={() => {
-						handleRemoveSegment(messages.length - index - 1);
-					}}
-				>
-					- Remove Segment
-				</button>
+				<Button
+					text="- Remove Segment"
+					id={`removeSegmentButton_${stopTimes.length - index - 1}`}
+					onChangeFunction={() => handleRemoveSegment(messages.length - index - 1)}
+					className="text-primaryColor font-semibold px-0 py-0"
+				/>
 			</div>
 
 			<div className="flex justify-between items-center gap-2">
@@ -45,23 +43,22 @@ export default function MessageInputSection({
 						index={stopTimes.length - index - 1}
 					/>
 				</div>
-				<div>
-					<button
-						type="button"
-						className="bg-primaryColor text-white font-semibold font-sans h-10 px-2 rounded-lg whitespace-nowrap"
-						onClick={(e) => handleGetTimestamp(stopTimes.length - index - 1, e)}
-					>
-						Get Timestamp
-					</button>
+				<div className="pt-6">
+					<Button
+						text="Get Timestamp"
+						id={`getTimestampButton_${stopTimes.length - index - 1}`}
+						onChangeFunction={(e) => handleGetTimestamp(stopTimes.length - index - 1, e)}
+						className="text-white bg-primaryColor hover:bg-lightBlue px-3"
+					/>
 				</div>
 			</div>
 
 			<TextAreaField
 				headerText="Confirmation Message:"
 				value={messages[messages.length - index - 1]}
-				id={`confirmationTextField_${messages.length - index - 1}`}
 				onChangeFunction={handleMessagesChange}
 				index={messages.length - index - 1}
+				id={`confirmationTextField_${messages.length - index - 1}_`}
 			/>
 		</div>
 	));
@@ -72,17 +69,22 @@ export default function MessageInputSection({
 				<div className="flex justify-between items-center">
 					<div>
 						{isChapterSegmentAvailable && (
-							<FormControlLabel
-								control={<Checkbox checked={isChapterSegmentChecked} onChange={handleChaperCheckboxChange} />}
-								label="Use default segmentation from the video"
+							<CheckboxInputField
+								value={isChapterSegmentChecked}
+								onChangeFunction={handleChaperCheckboxChange}
+								headerText="Use default segmentation from the video"
+								id="chapterSegmentationCheckbox_"
 							/>
 						)}
 					</div>
 					<div>
 						{!isChapterSegmentChecked && (
-							<button type="button" onClick={handleAddSegment} className="text-primaryColor font-semibold font-sans">
-								+ Add a Segment
-							</button>
+							<Button
+								text="+ Add a Segment"
+								onChangeFunction={() => handleAddSegment()}
+								className="text-primaryColor font-semibold px-0 py-0"
+								id="addSegmentButton_"
+							/>
 						)}
 					</div>
 				</div>

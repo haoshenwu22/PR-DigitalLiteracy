@@ -19,9 +19,10 @@ import PropTypes from 'prop-types';
  *
  * @returns {JSX.Element} The ImageInputField component.
  */
-export default function ImageInputField({ onChangeFunction, value, placeholder }) {
+export default function ImageInputField({ onChangeFunction, value, placeholder, id }) {
 	return (
 		<div
+			id={id}
 			onDrop={(e) => onChangeFunction(e, 'images')}
 			style={{ border: '2px dashed #ccc', padding: '20px', cursor: 'pointer' }}
 		>
@@ -49,4 +50,5 @@ ImageInputField.propTypes = {
 			file: PropTypes.instanceOf(File).isRequired,
 		}),
 	).isRequired,
+	id: PropTypes.string.isRequired,
 };

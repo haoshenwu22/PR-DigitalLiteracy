@@ -8,6 +8,7 @@ import TextAreaField from '../AddVideo/Components/TextAreaField';
 import TextInputField from '../AddVideo/Components/TextInputField';
 import SelectionInputField from '../AddVideo/Components/SelectionInputField';
 import ImageInputField from '../AddVideo/Components/ImageInputField';
+import CheckboxInputField from '../AddVideo/Components/CheckboxInputField';
 
 /**
  * AddQuizQuestions Component
@@ -150,12 +151,12 @@ export default function AddQuizQuestions() {
 					inputLabel="Select Platform"
 					value={platform}
 					onChangeFunction={setPlatform}
-					id="platformSelectionField_"
 					selectionFields={[
 						{ type: 'header', text: 'Select Platform' },
 						{ type: 'selection', value: 'mobile', text: 'Mobile' },
 						{ type: 'selection', value: 'desktop', text: 'Desktop' },
 					]}
+					id="platformSelectionField_"
 				/>
 
 				<SelectionInputField
@@ -163,13 +164,13 @@ export default function AddQuizQuestions() {
 					inputLabel="Select Difficulty"
 					value={difficulty}
 					onChangeFunction={setDifficulty}
-					id="difficultySelectionField_"
 					selectionFields={[
 						{ type: 'header', text: 'Select Difficulty' },
 						{ type: 'selection', value: 'easy', text: 'Easy' },
 						{ type: 'selection', value: 'medium', text: 'Medium' },
 						{ type: 'selection', value: 'hard', text: 'Hard' },
 					]}
+					id="difficultySelectionField_"
 				/>
 
 				<TextInputField
@@ -222,49 +223,45 @@ export default function AddQuizQuestions() {
 							placeholder={`Enter Text for Option ${optionIndex + 1}`}
 							value={option.label}
 							onChangeFunction={(value) => handleOptionChange(optionIndex, 'label', value)}
-							id={`optionLabel${optionIndex}`}
+							id={`optionTextField${optionIndex}_`}
 						/>
 
 						<ImageInputField
 							onChangeFunction={(e) => handleOptionImageDrop(e, optionIndex)}
 							value={option.images}
 							placeholder={`Drag & Drop Images for Option ${optionIndex + 1}`}
+							id={`optionImageField${optionIndex}_`}
 						/>
 
-						<div className="flex items-center mb-2">
-							<label htmlFor={`optionIsCorrect${optionIndex}`} className="text-gray-700">
-								Is Correct
-								<input
-									type="checkbox"
-									id={`optionIsCorrect${optionIndex}`}
-									checked={option.isCorrect}
-									onChange={(e) => handleOptionChange(optionIndex, 'isCorrect', e.target.checked)}
-									className="ml-2 leading-tight"
-								/>
-							</label>
-						</div>
+						<CheckboxInputField
+							value={option.isCorrect}
+							onChangeFunction={(newValue) => handleOptionChange(optionIndex, 'isCorrect', newValue)}
+							headerText="Is Correct"
+							id={`optionCheckboxField${optionIndex}_`}
+						/>
+
 						<div className="flex">
-							<button
-								type="button"
-								onClick={() => handleRemoveOption(optionIndex)}
-								className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-							>
-								Remove Option
-							</button>
+							<Button
+								onChangeFunction={() => handleRemoveOption(optionIndex)}
+								text="Remove Option"
+								className="bg-red-500 hover:bg-red-700 px-3"
+								id="removeOptionButton_"
+							/>
 						</div>
 					</div>
 				))}
-				<button
-					type="button"
-					onClick={handleAddOption}
-					className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-4"
-				>
-					Add Option
-				</button>
+				<div className="flex">
+					<Button
+						onChangeFunction={handleAddOption}
+						text="Add Option"
+						className="bg-green-500 hover:bg-green-700 px-3"
+						id="addOptionButton_"
+					/>
+				</div>
 			</section>
 
 			<div className="flex justify-center mt-8">
-				<Button onChangeFunction={handleSubmit} text="Submit" />
+				<Button onChangeFunction={handleSubmit} text="Submit" id="submitButton_" />
 				<ToastContainer />
 			</div>
 		</form>

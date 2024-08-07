@@ -92,10 +92,6 @@ function AddVideo({ editVideoData }) {
 
 	const validateStopTimes = (value, index) => {
 		const validInput = convertTimestampToSeconds(value);
-		console.log('stopTimes ', stopTimes);
-		console.log('value ', value);
-		console.log('validInput ', validInput);
-		console.log('index ', index);
 
 		// Check if validInput is not a number (NaN) or null
 		if (typeof validInput !== 'number') {
@@ -297,9 +293,9 @@ function AddVideo({ editVideoData }) {
 
 				<div className="flex">
 					{editVideoData ? (
-						<Button onChangeFunction={handleSubmit} text="Update" />
+						<Button onChangeFunction={handleSubmit} text="Update" id="addVideoUpdateButton" />
 					) : (
-						<Button onChangeFunction={handleSubmit} text="Submit" />
+						<Button onChangeFunction={handleSubmit} text="Submit" id="addVideoSubmitButton" />
 					)}
 				</div>
 			</section>
