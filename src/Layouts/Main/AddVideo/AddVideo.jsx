@@ -279,6 +279,7 @@ function AddVideo({ editVideoData }) {
 
 				<MessageInputSection
 					handleAddSegment={handleAddSegment}
+					handleRemoveSegment={handleRemoveSegment}
 					isChapterSegmentAvailable={isChapterSegmentAvailable}
 					isChapterSegmentChecked={isChapterSegmentChecked}
 					messages={messages}
@@ -287,7 +288,6 @@ function AddVideo({ editVideoData }) {
 					validateStopTimes={validateStopTimes}
 					handleMessagesChange={handleMessagesChange}
 					handleGetTimestamp={handleGetTimestamp}
-					handleRemoveSegment={handleRemoveSegment}
 					handleChaperCheckboxChange={handleChaperCheckboxChange}
 				/>
 
