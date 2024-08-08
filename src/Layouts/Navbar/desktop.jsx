@@ -16,15 +16,10 @@ const navItems = [
 		{/* <Button color="inherit" component={Link} to="/help">
 				Ask a Question
 			</Button> 
-		<Button
-		variant="outlined"
-		color="primary"
-		component={Link}
-		to="/quiz"
-		>
-		Take Quiz
+				*/}
+		<Button variant="outlined" color="primary" component={Link} to="/quiz">
+			Take Quiz
 		</Button>
-		*/}
 
 		<Button
 			variant="outlined"
