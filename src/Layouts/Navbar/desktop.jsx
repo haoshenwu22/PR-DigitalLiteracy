@@ -11,12 +11,11 @@ const navItems = [
 	<Link key="home_logo" to="/">
 		<img src={logo} alt="home" className="h-16 mr-4 mx-auto my-4 hidden md:block" />
 	</Link>,
-	
 
 	<div key="ask_a_question" className="flex-grow flex justify-end gap-4">
 		{/* <Button color="inherit" component={Link} to="/help">
 				Ask a Question
-			</Button> */}
+			</Button> 
 		<Button
 		variant="outlined"
 		color="primary"
@@ -25,6 +24,7 @@ const navItems = [
 		>
 		Take Quiz
 		</Button>
+		*/}
 
 		<Button
 			variant="outlined"
@@ -37,7 +37,6 @@ const navItems = [
 		>
 			Find help Nearby
 		</Button>
-
 	</div>,
 	<Fragment key="profile_menu">
 		<ProfileMenu />
