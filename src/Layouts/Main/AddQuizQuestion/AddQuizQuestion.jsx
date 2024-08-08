@@ -3,12 +3,12 @@ import { v4 as uuidv4 } from 'uuid';
 import { ToastContainer, toast, Zoom } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import addQuizQuestionToFirestore from './addQuizFirestore';
-import Button from '../AddVideo/Components/Button';
-import TextAreaField from '../AddVideo/Components/TextAreaField';
-import TextInputField from '../AddVideo/Components/TextInputField';
-import SelectionInputField from '../AddVideo/Components/SelectionInputField';
-import ImageInputField from '../AddVideo/Components/ImageInputField';
-import CheckboxInputField from '../AddVideo/Components/CheckboxInputField';
+import Button from '../../../components/Buttons/Button';
+import TextAreaField from '../../../components/InputFields/TextAreaField';
+import TextInputField from '../../../components/InputFields/TextInputField';
+import SelectionInputField from '../../../components/InputFields/SelectionInputField';
+import ImageInputField from '../../../components/InputFields/ImageInputField';
+import CheckboxInputField from '../../../components/InputFields/CheckboxInputField';
 
 /**
  * AddQuizQuestions Component

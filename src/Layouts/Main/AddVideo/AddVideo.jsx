@@ -4,8 +4,8 @@ import { doc } from 'firebase/firestore';
 import { db } from '../../../firebase/firebase';
 import { addVideoData, updateData } from '../../../firebase/firebaseReadWrite';
 import './styles.css';
-import Popup from './Components/Popups';
-import Button from './Components/Button';
+import Popup from '../../../components/Popups/Popups';
+import Button from '../../../components/Buttons/Button';
 
 import MessageInputSection, { validateMessageInputSection } from './Layouts/MessageInputSection';
 import VideoInputSection, { validateVideoInputSection } from './Layouts/VideoInputSection';

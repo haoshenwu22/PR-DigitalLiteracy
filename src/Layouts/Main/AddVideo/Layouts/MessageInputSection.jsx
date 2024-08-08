@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import TextInputField from '../Components/TextInputField';
-import TextAreaField from '../Components/TextAreaField';
-import CheckboxInputField from '../Components/CheckboxInputField';
-import Button from '../Components/Button';
+import TextInputField from '../../../../components/InputFields/TextInputField';
+import TextAreaField from '../../../../components/InputFields/TextAreaField';
+import CheckboxInputField from '../../../../components/InputFields/CheckboxInputField';
+import Button from '../../../../components/Buttons/Button';
 
 export default function MessageInputSection({
 	handleAddSegment,

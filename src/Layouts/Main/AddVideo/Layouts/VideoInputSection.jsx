@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { fetchTopicsAndSubtopics } from '../../../../firebase/firebaseReadWrite';
-import TextInputField from '../Components/TextInputField';
-import TagsInputField from '../Components/TagsInputField';
-import SelectionInputField from '../Components/SelectionInputField';
+import TextInputField from '../../../../components/InputFields/TextInputField';
+import TagsInputField from '../../../../components/InputFields/TagsInputField';
+import SelectionInputField from '../../../../components/InputFields/SelectionInputField';
 
 export default function VideoInputSection({
 	url,
